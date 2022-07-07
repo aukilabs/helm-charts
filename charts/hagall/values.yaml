@@ -68,9 +68,19 @@ tolerations: []
 
 affinity: {}
 
-extraEnv: {}
-  # - name: HAGALL_ENABLE_ODAL
-  #   value: "true"
+config:
+  HAGALL_LOG_LEVEL: info
+  HAGALL_SPACE_TIMEOUT: "2h"
+  HAGALL_SPACE_TIMEOUT_CHECK_INTERVAL: "5m"
+  HAGALL_SYNC_CLOCK_INTERVAL: "5s"
+  HAGALL_EVENTS_QUEUE_SIZE: "10000"
+  HAGALL_EVENTS_BATCH_SIZE: "100"
+  HAGALL_EVENTS_FLUSH_INTERVAL: "30s"
+  HAGALL_HDS_REGISTRATION_INTERVAL: "10s"
+  HAGALL_ENABLE_ODAL: "true"
+  HAGALL_ENABLE_VIKJA: "true"
+  HAGALL_ENABLE_POL: "true"
+  HAGALL_ENABLE_DAGAZ: "true"
 
 monitoring:
   namespace: monitoring

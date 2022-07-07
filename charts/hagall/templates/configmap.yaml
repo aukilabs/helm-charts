@@ -6,19 +6,6 @@ metadata:
     {{- include "hagall.labels" . | nindent 4 }}
 data:
   HAGALL_ADDR: :80
-  HAGALL_WALLET_ADDR: ""
   HAGALL_HDS_ENDPOINT: "https://hds.aukiverse.com"
-  HAGALL_LOG_LEVEL: info
-  HAGALL_SPACE_TIMEOUT: "2h"
-  HAGALL_SPACE_TIMEOUT_CHECK_INTERVAL: "5m"
-  HAGALL_SYNC_CLOCK_INTERVAL: "5s"
-  HAGALL_EVENTS_QUEUE_SIZE: "10000"
-  HAGALL_EVENTS_BATCH_SIZE: "100"
-  HAGALL_EVENTS_FLUSH_INTERVAL: "30s"
-  HAGALL_HDS_REGISTRATION_INTERVAL: "10s"
   HAGALL_EVENTS_ENDPOINT: "https://87cuuzjn40.execute-api.us-west-1.amazonaws.com/LogProd_serverless_lambda_stage/log"
-  HAGALL_ENABLE_ODAL: "true"
-  HAGALL_ENABLE_VIKJA: "true"
-  HAGALL_ENABLE_POL: "true"
-  HAGALL_ENABLE_DAGAZ: "true"
-  HAGALL_PUBLIC_ENDPOINT: "https://hagall-v04.dev.aukiverse.com"
+  {{- toYaml .Values.config | nindent 2  }}
