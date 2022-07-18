@@ -10,6 +10,13 @@ spec:
   containers:
     - name: wget
       image: busybox
-      command: ['wget']
-      args: ['{{ include "hagall.fullname" . }}:{{ .Values.service.port }}']
+      command:
+        - '/bin/sh'
+        - -c
+        - |
+          set +x
+          for attempt in $(seq 1 5); do
+            wget {{ include "hagall.fullname" . }}:{{ .Values.service.port }}
+            sleep 2
+          done
   restartPolicy: Never
