@@ -16,7 +16,8 @@ spec:
         - |
           set +x
           for attempt in $(seq 1 5); do
-            wget {{ include "hagall.fullname" . }}:{{ .Values.service.port }}
+            wget {{ include "hagall.fullname" . }}:{{ .Values.service.port }}/health && exit 0
             sleep 2
           done
+          exit 1
   restartPolicy: Never
