@@ -48,8 +48,8 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           envFrom:
-            configMapRef:
-              name: {{ include "hagall.fullname" . }}
+            - configMapRef:
+                name: {{ include "hagall.fullname" . }}
           env:
             {{- toYaml .Values.extraEnv | nindent 12 }}
       {{- with .Values.nodeSelector }}
