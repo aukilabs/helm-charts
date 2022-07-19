@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "hagall.labels" . | nindent 4 }}
 data:
-  HAGALL_ADDR: :80
+  HAGALL_ADDR: :8080
   HAGALL_HDS_ENDPOINT: "https://hds.aukiverse.com"
   HAGALL_EVENTS_ENDPOINT: "https://87cuuzjn40.execute-api.us-west-1.amazonaws.com/LogProd_serverless_lambda_stage/log"
   {{- toYaml .Values.config | nindent 2  }}
