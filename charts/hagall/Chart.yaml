@@ -2,7 +2,7 @@ apiVersion: v2
 name: hagall
 description: Distributed real-time networking server responsible for relaying events to connected clients in a space and channel in the Aukiverse
 type: application
-version: 0.1.0
+version: 0.1.1
 appVersion: "0.4"
 maintainers:
   - name: dataviruset
