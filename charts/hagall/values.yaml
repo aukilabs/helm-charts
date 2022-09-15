@@ -70,7 +70,7 @@ affinity: {}
 
 config:
   HAGALL_LOG_LEVEL: info
-  HAGALL_WALLET_ADDR: 0x0
+  HAGALL_WALLET_ADDR: "0x0"
   HAGALL_PUBLIC_ENDPOINT: "https://hagall.example.com"
 
 monitoring:
