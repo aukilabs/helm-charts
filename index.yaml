@@ -2,6 +2,19 @@ apiVersion: v1
 entries:
   hagall:
   - apiVersion: v2
+    appVersion: "0.4"
+    created: "2022-09-16T11:12:59.535225402Z"
+    description: Distributed real-time networking server responsible for relaying
+      events to connected clients in a space and channel in the Aukiverse
+    digest: f4c9e997c86fbe12fe2f315cb78d448229da24595a1bdec0664640f944baa82c
+    maintainers:
+    - name: dataviruset
+    name: hagall
+    type: application
+    urls:
+    - https://github.com/aukilabs/helm-charts/releases/download/hagall-0.1.1/hagall-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
     appVersion: 0.4.2
     created: "2022-08-25T16:46:36.116866104Z"
     description: Distributed real-time networking server responsible for relaying
@@ -14,4 +27,4 @@ entries:
     urls:
     - https://github.com/aukilabs/helm-charts/releases/download/hagall-0.1.0/hagall-0.1.0.tgz
     version: 0.1.0
-generated: "2022-08-25T16:46:36.116877105Z"
+generated: "2022-09-16T11:12:59.535237002Z"
