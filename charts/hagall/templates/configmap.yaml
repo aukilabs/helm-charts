@@ -6,4 +6,5 @@ metadata:
     {{- include "hagall.labels" . | nindent 4 }}
 data:
   HAGALL_ADDR: :8080
+  HAGALL_PRIVATE_KEY_FILE: "/private-key-volume/hagall-private.key"
   {{- toYaml .Values.config | nindent 2  }}
