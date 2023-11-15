@@ -25,21 +25,22 @@ jobs:
       - name: Set up Helm
         uses: azure/setup-helm@v1
         with:
-          version: v3.9.1
+          version: v3.13.2
 
       - uses: actions/setup-python@v2
         with:
-          python-version: 3.7
+          python-version: 3.10
+          check-latest: true
 
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.2.1
+        uses: helm/chart-testing-action@v2.6.0
 
       - name: Run chart-testing (list-changed)
         id: list-changed
         run: |
           changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }})
           if [[ -n "$changed" ]]; then
-            echo "::set-output name=changed::true"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Run chart-testing (lint)
@@ -54,4 +55,5 @@ jobs:
           kubectl_version: ${{ matrix.k8s_version }}
 
       - name: Run chart-testing (install)
+        if: steps.list-changed.outputs.changed == 'true'
         run: ct install --target-branch ${{ github.event.repository.default_branch }}
