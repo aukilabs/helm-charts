@@ -78,7 +78,7 @@ existingSecretName: ""
 
 # Method 2, create a new secret (only used if useExistingSecret is false)
 secrets:
-  privateKey: "" # If private key is supplied through this value, it should be set securely, e.g., using --set-file
+  privateKey: ""  # If private key is supplied through this value, it should be set securely, e.g., using --set-file
 
 monitoring:
   namespace: monitoring
