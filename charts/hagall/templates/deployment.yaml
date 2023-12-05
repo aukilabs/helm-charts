@@ -52,6 +52,16 @@ spec:
                 name: {{ include "hagall.fullname" . }}
           env:
             {{- toYaml .Values.extraEnv | nindent 12 }}
+          volumeMounts:
+            - name: private-key-volume
+              mountPath: "/private-key-volume/hagall-private.key"
+              subPath: hagall-private.key
+              readOnly: true
+      volumes:
+        - name: private-key-volume
+          secret:
+            secretName: {{ if .Values.useExistingSecret }}{{ .Values.existingSecretName }}{{ else }}{{ include "hagall.fullname" . }}{{ end }}
+            defaultMode: 0400
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

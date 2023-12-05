@@ -1,8 +1,8 @@
 apiVersion: v2
 name: hagall
-description: Distributed real-time networking server responsible for relaying events to connected clients in a space and channel in the Aukiverse
+description: Distributed, real-time networking server responsible for relaying messages among clients (participants) in posemesh sessions.
 type: application
-version: 0.1.1
-appVersion: "0.4"
+version: 0.2.0
+appVersion: "0.5"
 maintainers:
   - name: dataviruset

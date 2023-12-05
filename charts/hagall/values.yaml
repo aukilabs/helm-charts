@@ -70,8 +70,15 @@ affinity: {}
 
 config:
   HAGALL_LOG_LEVEL: info
-  HAGALL_WALLET_ADDR: "0x0"
   HAGALL_PUBLIC_ENDPOINT: "https://hagall.example.com"
+
+# Method 1, use an existing secret
+useExistingSecret: false
+existingSecretName: ""
+
+# Method 2, create a new secret (only used if useExistingSecret is false)
+secrets:
+  privateKey: ""  # If private key is supplied through this value, it should be set securely, e.g., using --set-file
 
 monitoring:
   namespace: monitoring
