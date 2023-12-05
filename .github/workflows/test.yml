@@ -54,6 +54,10 @@ jobs:
           node_image: kindest/node:${{ matrix.k8s_version }}
           kubectl_version: ${{ matrix.k8s_version }}
 
+      - name: Run pre-install scripts
+        if: steps.list-changed.outputs.changed == 'true'
+        run: charts/*/scripts/pre-install.sh
+
       - name: Run chart-testing (install)
         if: steps.list-changed.outputs.changed == 'true'
         run: ct install --target-branch ${{ github.event.repository.default_branch }}
