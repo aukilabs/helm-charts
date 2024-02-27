@@ -43,7 +43,7 @@ spec:
               port: admin
           readinessProbe:
             httpGet:
-              path: /health
+              path: /ready
               port: admin
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
