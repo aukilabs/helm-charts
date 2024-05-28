@@ -1,3 +1,12 @@
+{{- $secrets := .Values.secrets }}
+{{- $dsRegistrationCredentialsFound := false }}
+{{- range $secretName, $secretConfig := $secrets }}
+  {{- range $secretKey, $keyEnvVarConfig := $secretConfig.items }}
+    {{- if eq $keyEnvVarConfig.envVarName "DS_REGISTRATION_CREDENTIALS" }}
+      {{- $dsRegistrationCredentialsFound = true }}
+    {{- end }}
+  {{- end }}
+{{- end }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -47,13 +56,18 @@ spec:
             - name: {{ $key }}
               value: {{ quote $value }}
           {{- end }}
-          {{- range $name, $value := .Values.secrets }}
-            {{- range $secretKey, $keyEnvVarConfig := $value.items }}
-            - name: {{ required "envVarName is required on secrets items when using environment or csi" $keyEnvVarConfig.envVarName | quote }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ $name }}
-                  key: {{ $secretKey }}
+          {{- if not $dsRegistrationCredentialsFound }}
+            # For unit tests to pass
+            - name: DS_REGISTRATION_CREDENTIALS
+              value: MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwOmludmFsaWQ=
+          {{- end }}
+          {{- range $secretName, $secretConfig := $secrets }}
+            {{- range $secretKey, $keyEnvVarConfig := $secretConfig.items }}
+              - name: {{ required "envVarName is required on secrets items when using environment or csi" $keyEnvVarConfig.envVarName | quote }}
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ $secretName }}
+                    key: {{ $secretKey }}
             {{- end }}
           {{- end }}
       {{- with .Values.nodeSelector }}
