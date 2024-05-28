@@ -1,4 +1,12 @@
 {{- $secrets := .Values.secrets }}
+{{- $dsPostgresURLFound := false }}
+{{- range $secretName, $secretConfig := $secrets }}
+  {{- range $secretKey, $keyEnvVarConfig := $secretConfig.items }}
+    {{- if eq $keyEnvVarConfig.envVarName "DS_POSTGRES_URL" }}
+      {{- $dsPostgresURLFound = true }}
+    {{- end }}
+  {{- end }}
+{{- end }}
 {{- $dsRegistrationCredentialsFound := false }}
 {{- range $secretName, $secretConfig := $secrets }}
   {{- range $secretKey, $keyEnvVarConfig := $secretConfig.items }}
@@ -57,7 +65,9 @@ spec:
               value: {{ quote $value }}
           {{- end }}
           {{- if not $dsRegistrationCredentialsFound }}
-            # For unit tests to pass
+            # For integration tests to pass
+            - name: DS_POSTGRES_URL
+              value: "postgres://domain-server:domain-server@domain-server-postgresql:5432/domain-server"
             - name: DS_REGISTRATION_CREDENTIALS
               value: MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwOmludmFsaWQ=
           {{- end }}

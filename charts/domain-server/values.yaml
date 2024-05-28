@@ -139,3 +139,16 @@ persistentVolume:
   ## Useful if Persistent Volumes have been provisioned in advance and you want to use a specific one
   ##
   # volumeName: ""
+
+postgresql:
+  # If true, the PostgreSQL dependency is enabled
+  enabled: true
+  global:
+    postgresql:
+      auth:
+        username: domain-server
+        password: domain-server
+        database: domain-server
+  primary:
+    networkPolicy:
+      enabled: false
