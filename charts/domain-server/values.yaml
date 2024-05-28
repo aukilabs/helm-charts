@@ -47,14 +47,14 @@ envVars:
   DS_LOG_LEVEL: "debug"
   DS_OPERATION_MODE: "public"
   DS_STORAGE_LOCAL_PATH: "./data/domain-data"
-#secrets:
-#  domain-server:
-#    as: environment
-#    items:
-#      postgres_url:
-#        envVarName: DS_POSTGRES_URL
-#      registration_credentials:
-#        envVarName: DS_REGISTRATION_CREDENTIALS
+# secrets:
+#   domain-server:
+#     as: environment
+#     items:
+#       postgres_url:
+#         envVarName: DS_POSTGRES_URL
+#       registration_credentials:
+#         envVarName: DS_REGISTRATION_CREDENTIALS
 
 containerResources:
   limits:
