@@ -45,17 +45,17 @@ envVars:
   DS_POSTGRES_TRACE_LEVEL: "none"
   DS_PUBLIC_URL: ""
   DS_LOG_LEVEL: "debug"
-  DS_DDS_URL: "http://dds:8080"
   DS_OPERATION_MODE: "public"
   DS_STORAGE_LOCAL_PATH: "./data/domain-data"
-secrets:
-  domain-server:
-    as: environment
-    items:
-      postgres_url:
-        envVarName: DS_POSTGRES_URL
-      registration_credentials:
-        envVarName: DS_REGISTRATION_CREDENTIALS
+#secrets:
+#  domain-server:
+#    as: environment
+#    items:
+#      postgres_url:
+#        envVarName: DS_POSTGRES_URL
+#      registration_credentials:
+#        envVarName: DS_REGISTRATION_CREDENTIALS
+
 containerResources:
   limits:
     memory: 256Mi
