@@ -29,6 +29,8 @@ service:
 ingress:
   enabled: true
   annotations:
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/group.name: default
@@ -43,7 +45,7 @@ envVars:
   DS_ADDR: ":8080"
   DS_ADMIN_ADDR: ":18190"
   DS_POSTGRES_TRACE_LEVEL: "none"
-  DS_PUBLIC_URL: ""
+  DS_PUBLIC_URL: "https://domain-server.example.com"
   DS_LOG_LEVEL: "debug"
   DS_OPERATION_MODE: "public"
   DS_STORAGE_LOCAL_PATH: "./data/domain-data"
