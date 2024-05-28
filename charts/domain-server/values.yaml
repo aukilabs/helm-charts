@@ -1,7 +1,8 @@
 containerImage:
-  repository: 026987513085.dkr.ecr.us-east-1.amazonaws.com/domain-server
-  tag: internal
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
+  repository: aukilabs/domain-server
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
 applicationName: domain-server
 tolerations:
   - key: "dedicated"

@@ -26,9 +26,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Values.applicationName }}
-          {{- $repo := required ".Values.containerImage.repository is required" .Values.containerImage.repository }}
-          {{- $tag := required ".Values.containerImage.tag is required" .Values.containerImage.tag }}
-          image: "{{ $repo }}:{{ $tag }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default (print "v" .Chart.AppVersion) }}"
           imagePullPolicy: {{ .Values.containerImage.pullPolicy | default "IfNotPresent" }}
           ports:
             {{- range $key, $portSpec := .Values.containerPorts }}
