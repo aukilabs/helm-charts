@@ -1,0 +1,4 @@
+name: domain-server
+apiVersion: v2
+type: application
+version: 0.1.0
