@@ -63,11 +63,11 @@ spec:
           {{- end }}
           {{- range $secretName, $secretConfig := $secrets }}
             {{- range $secretKey, $keyEnvVarConfig := $secretConfig.items }}
-              - name: {{ required "envVarName is required on secrets items when using environment or csi" $keyEnvVarConfig.envVarName | quote }}
-                valueFrom:
-                  secretKeyRef:
-                    name: {{ $secretName }}
-                    key: {{ $secretKey }}
+            - name: {{ required "envVarName is required on secrets items when using environment or csi" $keyEnvVarConfig.envVarName | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $secretName }}
+                  key: {{ $secretKey }}
             {{- end }}
           {{- end }}
       {{- with .Values.nodeSelector }}
