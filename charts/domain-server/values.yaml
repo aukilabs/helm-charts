@@ -65,8 +65,9 @@ containerResources:
 monitoring:
   namespace: monitoring
   podMonitor:
-    create: true
+    create: false
     scrapeInterval: 10s
+
 persistentVolume:
   ## If true, create/use a Persistent Volume Claim
   ## If false, use emptyDir
