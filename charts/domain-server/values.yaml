@@ -153,3 +153,8 @@ postgresql:
     networkPolicy:
       enabled: false
   fullnameOverride: "domain-server-postgresql"
+
+securityContext:
+  fsGroup: 100
+  runAsGroup: 101
+  runAsUser: 100
