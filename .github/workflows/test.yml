@@ -61,5 +61,8 @@ jobs:
       - name: Run chart-testing (install)
         if: steps.list-changed.outputs.changed == 'true'
         run: |
-          unset CT_CONFIG_DIR # https://github.com/helm/chart-testing/issues/655
-          ct install --target-branch ${{ github.event.repository.default_branch }}
+          # Workaround for https://github.com/helm/chart-testing/issues/655
+          repos="$(yq '.dependencies[] | select(.repository != null) | "\(.name)=\(.repository)"' charts/*/Chart.yaml)"
+          repo_args="$(echo "$repos" | sed '/^=$/d' | sort -t = -k 2 -u | awk '{printf "%s,", $0}' | sed 's/,$//')"
+          test -n "$repo_args" && chart_repos="--chart-repos $repo_args" || chart_repos=""
+          ct install --target-branch "${{ github.event.repository.default_branch }}" $chart_repos
