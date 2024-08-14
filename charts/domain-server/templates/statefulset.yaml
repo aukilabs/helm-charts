@@ -1,7 +1,16 @@
 {{- $secrets := .Values.secrets }}
+{{- $dsPostgresURLFound := false }}
 {{- $dsRegistrationCredentialsFound := false }}
+{{- $hasVolumeSecret := false }}
+{{- $fullName := include "domain-server.fullname" . }}
 {{- range $secretName, $secretConfig := $secrets }}
+  {{- if eq $secretConfig.as "volume" }}
+    {{- $hasVolumeSecret = true }}
+  {{- end }}
   {{- range $secretKey, $keyEnvVarConfig := $secretConfig.items }}
+    {{- if eq $keyEnvVarConfig.envVarName "DS_POSTGRES_URL" }}
+      {{- $dsPostgresURLFound = true }}
+    {{- end }}
     {{- if eq $keyEnvVarConfig.envVarName "DS_REGISTRATION_CREDENTIALS" }}
       {{- $dsRegistrationCredentialsFound = true }}
     {{- end }}
@@ -47,6 +56,18 @@ spec:
             - name: {{ ternary .Values.persistentVolume.statefulSetNameOverride "storage-volume" (and .Values.persistentVolume.enabled (not (empty .Values.persistentVolume.statefulSetNameOverride))) }}
               mountPath: "{{ .Values.persistentVolume.mountPath }}"
               subPath: "{{ .Values.persistentVolume.subPath }}"
+          {{- if $hasVolumeSecret }}
+            {{- range $secretName, $secretConfig := $secrets }}
+              {{- if eq $secretConfig.as "volume" }}
+            - name: {{ $secretName }}
+              mountPath: {{ $secretConfig.mountPath }}
+                {{- if $secretConfig.subPath }}
+              subPath: {{ $secretConfig.subPath }}
+                {{- end }}
+              readOnly: true
+              {{- end }}
+            {{- end }}
+          {{- end }}
           securityContext:
 {{ toYaml .Values.containerSecurityContext | indent 12 }}
           resources:
@@ -56,29 +77,17 @@ spec:
             - name: {{ $key }}
               value: {{ quote $value }}
           {{- end }}
-          {{- if not $dsRegistrationCredentialsFound }}
-            # For integration tests to pass
-            - name: DS_POSTGRES_URL
-              value: "postgres://domain-server:domain-server@domain-server-postgresql:5432/domain-server?sslmode=disable"
-            - name: DS_REGISTRATION_CREDENTIALS
-              value: MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwOmludmFsaWQ=
-            - name: DS_WALLET_PRIVATE_KEY
-              value: 0x
-          {{- end }}
           {{- range $secretName, $secretConfig := $secrets }}
-            {{- range $secretKey, $keyEnvVarConfig := $secretConfig.items }}
+            {{- if or (eq $secretConfig.as "environment") (eq $secretConfig.as "csi") }} 
+              {{- range $secretKey, $keyEnvVarConfig := $secretConfig.items }}
             - name: {{ required "envVarName is required on secrets items when using environment or csi" $keyEnvVarConfig.envVarName | quote }}
               valueFrom:
                 secretKeyRef:
                   name: {{ $secretName }}
                   key: {{ $secretKey }}
+              {{- end }}
             {{- end }}
           {{- end }}
-          volumeMounts:
-            - name: private-key-volume
-              mountPath: /private-key-volume
-              subPath: wallet-private.key
-              readOnly: true
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -91,13 +100,24 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+    {{- if $hasVolumeSecret }}
     volumes:
-    - name: private-key-volume
-      secret:
-        secretName: {{ include "domain-server.fullname" . }}
-        defaultMode: 0400
-        items:
-        - key: wallet_private.key
+      {{- range $name, $value := $secrets }}
+        {{- if eq $value.as "volume" }}
+      - name: {{ $name }}
+        secret:
+          secretName: {{ $fullName }}
+          defaultMode: 0400
+          {{- if $value.items }}
+          items:
+            {{- range $secretKey, $keyMountConfig := $value.items }}
+            - key: {{ $secretKey }}
+              path: {{ required "filePath is required for secrets items" $keyMountConfig.filePath | quote }}
+            {{- end }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
 {{- if .Values.persistentVolume.enabled }}
   volumeClaimTemplates:
     - metadata:

@@ -49,14 +49,21 @@ envVars:
   DS_LOG_LEVEL: "debug"
   DS_OPERATION_MODE: "public"
   DS_STORAGE_LOCAL_PATH: "./data/domain-data"
-# secrets:
-#   domain-server:
-#     as: environment
-#     items:
-#       postgres_url:
-#         envVarName: DS_POSTGRES_URL
-#       registration_credentials:
-#         envVarName: DS_REGISTRATION_CREDENTIALS
+secrets:
+  domain-server:
+    as: environment
+    items:
+      postgres_url:
+        envVarName: DS_POSTGRES_URL
+      registration_credentials:
+        envVarName: DS_REGISTRATION_CREDENTIALS
+  domain-server-volume:
+    as: volume
+    mountPath: /domain-server-volume
+    readOnly: true
+    items:
+      wallet-private.key:
+        filePath: wallet-private.key
 
 containerResources:
   limits:
@@ -69,6 +76,12 @@ monitoring:
   podMonitor:
     create: false
     scrapeInterval: 10s
+
+useExistingSecret: false
+secretFile:
+  privateKey: "0x18bc573c6364da2f6c0772385d8589581429e9cabf03c186f99a9be51c6edd86"
+  postgresUrl: "postgres://domain-server:domain-server@domain-server-postgresql:5432/domain-server?sslmode=disable"
+  registrationCredentials: "MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwOmludmFsaWQ="
 
 persistentVolume:
   ## If true, create/use a Persistent Volume Claim
