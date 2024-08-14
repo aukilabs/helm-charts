@@ -7,14 +7,6 @@
   {{- if eq $secretConfig.as "volume" }}
     {{- $hasVolumeSecret = true }}
   {{- end }}
-  {{- range $secretKey, $keyEnvVarConfig := $secretConfig.items }}
-    {{- if eq $keyEnvVarConfig.envVarName "DS_POSTGRES_URL" }}
-      {{- $dsPostgresURLFound = true }}
-    {{- end }}
-    {{- if eq $keyEnvVarConfig.envVarName "DS_REGISTRATION_CREDENTIALS" }}
-      {{- $dsRegistrationCredentialsFound = true }}
-    {{- end }}
-  {{- end }}
 {{- end }}
 apiVersion: apps/v1
 kind: StatefulSet
@@ -100,24 +92,24 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- if $hasVolumeSecret }}
-    volumes:
-      {{- range $name, $value := $secrets }}
-        {{- if eq $value.as "volume" }}
-      - name: {{ $name }}
-        secret:
-          secretName: {{ $fullName }}
-          defaultMode: 0400
-          {{- if $value.items }}
-          items:
-            {{- range $secretKey, $keyMountConfig := $value.items }}
-            - key: {{ $secretKey }}
-              path: {{ required "filePath is required for secrets items" $keyMountConfig.filePath | quote }}
-            {{- end }}
-          {{- end }}
+{{- if $hasVolumeSecret }}
+      volumes:
+  {{- range $name, $value := $secrets }}
+    {{- if eq $value.as "volume" }}
+        - name: {{ $name }}
+          secret:
+            secretName: {{ $fullName }}
+            defaultMode: 0400
+      {{- if $value.items }}
+            items:
+        {{- range $secretKey, $keyMountConfig := $value.items }}
+              - key: {{ $secretKey }}
+                path: {{ required "filePath is required for secrets items" $keyMountConfig.filePath | quote }}
         {{- end }}
       {{- end }}
     {{- end }}
+  {{- end }}
+{{- end }}
 {{- if .Values.persistentVolume.enabled }}
   volumeClaimTemplates:
     - metadata:

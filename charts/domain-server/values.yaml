@@ -79,7 +79,7 @@ monitoring:
 
 useExistingSecret: false
 secretFile:
-  privateKey: "0x18bc573c6364da2f6c0772385d8589581429e9cabf03c186f99a9be51c6edd86"
+  privateKey: ""
   postgresUrl: "postgres://domain-server:domain-server@domain-server-postgresql:5432/domain-server?sslmode=disable"
   registrationCredentials: "MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwOmludmFsaWQ="
 
