@@ -77,6 +77,7 @@ spec:
           volumeMounts:
             - name: private-key-volume
               mountPath: /private-key-volume
+              subPath: wallet-private.key
               readOnly: true
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -96,8 +97,7 @@ spec:
         secretName: {{ include "domain-server.fullname" . }}
         defaultMode: 0400
         items:
-        - key: wallet_private_key
-          path: wallet-private.key
+        - key: wallet_private.key
 {{- if .Values.persistentVolume.enabled }}
   volumeClaimTemplates:
     - metadata:
