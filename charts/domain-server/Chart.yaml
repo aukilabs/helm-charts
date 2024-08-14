@@ -3,7 +3,7 @@ name: domain-server
 description: The Domain Server is responsible for storing poses of portals in domains and spatial domain data such as scene reconstructions and occupancy maps.
 type: application
 version: 0.1.2
-appVersion: "0.4"
+appVersion: "0.3"
 maintainers:
   - name: dataviruset
 dependencies:
