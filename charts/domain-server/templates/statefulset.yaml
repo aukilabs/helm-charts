@@ -1,12 +1,4 @@
 {{- $secrets := .Values.secrets }}
-{{- $dsPostgresURLFound := false }}
-{{- range $secretName, $secretConfig := $secrets }}
-  {{- range $secretKey, $keyEnvVarConfig := $secretConfig.items }}
-    {{- if eq $keyEnvVarConfig.envVarName "DS_POSTGRES_URL" }}
-      {{- $dsPostgresURLFound = true }}
-    {{- end }}
-  {{- end }}
-{{- end }}
 {{- $dsRegistrationCredentialsFound := false }}
 {{- range $secretName, $secretConfig := $secrets }}
   {{- range $secretKey, $keyEnvVarConfig := $secretConfig.items }}
@@ -70,16 +62,24 @@ spec:
               value: "postgres://domain-server:domain-server@domain-server-postgresql:5432/domain-server?sslmode=disable"
             - name: DS_REGISTRATION_CREDENTIALS
               value: MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwOmludmFsaWQ=
+            - name: DS_WALLET_PRIVATE_KEY
+              value: 0x
           {{- end }}
           {{- range $secretName, $secretConfig := $secrets }}
             {{- range $secretKey, $keyEnvVarConfig := $secretConfig.items }}
+              {{- if ne $secretKey "wallet_private_key" }}
             - name: {{ required "envVarName is required on secrets items when using environment or csi" $keyEnvVarConfig.envVarName | quote }}
               valueFrom:
                 secretKeyRef:
                   name: {{ $secretName }}
                   key: {{ $secretKey }}
+              {{- end }}
             {{- end }}
           {{- end }}
+          volumeMounts:
+            - name: private-key-volume
+              mountPath: /private-key-volume
+              readOnly: true
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -92,6 +92,14 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+    volumes:
+    - name: private-key-volume
+      secret:
+        secretName: {{ include "domain-server.fullname" . }}
+        defaultMode: 0400
+        items:
+        - key: wallet_private_key
+          path: wallet-private.key
 {{- if .Values.persistentVolume.enabled }}
   volumeClaimTemplates:
     - metadata:
