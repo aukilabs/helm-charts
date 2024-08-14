@@ -67,13 +67,11 @@ spec:
           {{- end }}
           {{- range $secretName, $secretConfig := $secrets }}
             {{- range $secretKey, $keyEnvVarConfig := $secretConfig.items }}
-              {{- if ne $secretKey "wallet_private_key" }}
             - name: {{ required "envVarName is required on secrets items when using environment or csi" $keyEnvVarConfig.envVarName | quote }}
               valueFrom:
                 secretKeyRef:
                   name: {{ $secretName }}
                   key: {{ $secretKey }}
-              {{- end }}
             {{- end }}
           {{- end }}
           volumeMounts:
