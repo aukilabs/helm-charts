@@ -2,7 +2,7 @@ apiVersion: v2
 name: domain-server
 description: The Domain Server is responsible for storing poses of portals in domains and spatial domain data such as scene reconstructions and occupancy maps.
 type: application
-version: 0.2.0
+version: 0.2.1
 appVersion: "0.3"
 maintainers:
   - name: dataviruset

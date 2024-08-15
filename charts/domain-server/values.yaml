@@ -49,6 +49,7 @@ envVars:
   DS_LOG_LEVEL: "debug"
   DS_OPERATION_MODE: "public"
   DS_STORAGE_LOCAL_PATH: "./data/domain-data"
+  DS_WALLET_PRIVATE_KEY_FILE_PATH: "/private-key-volume/wallet-private.key"
 secrets:
   domain-server:
     as: environment
@@ -57,9 +58,9 @@ secrets:
         envVarName: DS_POSTGRES_URL
       registration_credentials:
         envVarName: DS_REGISTRATION_CREDENTIALS
-  domain-server-volume:
+  private-key-volume:
     as: volume
-    mountPath: /domain-server-volume
+    mountPath: /private-key-volume
     readOnly: true
     items:
       wallet-private.key:
