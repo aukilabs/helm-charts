@@ -3,7 +3,8 @@
 {{- $dsRegistrationCredentialsFound := false }}
 {{- $hasVolumeSecret := false }}
 {{- $fullName := include "domain-server.fullname" . }}
-{{- range $secretName, $secretConfig := $secrets }}
+{{- $secretName := .Values.secretName }}
+{{- range $secretKey, $secretConfig := $secrets }}
   {{- if eq $secretConfig.as "volume" }}
     {{- $hasVolumeSecret = true }}
   {{- end }}
@@ -75,7 +76,7 @@ spec:
             - name: {{ required "envVarName is required on secrets items when using environment or csi" $keyEnvVarConfig.envVarName | quote }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ $fullName }}
+                  name: {{ $secretName }}
                   key: {{ $secretKey }}
               {{- end }}
             {{- end }}
@@ -98,7 +99,7 @@ spec:
     {{- if eq $value.as "volume" }}
         - name: {{ $name }}
           secret:
-            secretName: {{ $fullName }}
+            secretName: {{ $secretName }}
             defaultMode: 0400
       {{- if $value.items }}
             items:
