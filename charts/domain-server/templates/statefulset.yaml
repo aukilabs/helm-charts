@@ -75,7 +75,7 @@ spec:
             - name: {{ required "envVarName is required on secrets items when using environment or csi" $keyEnvVarConfig.envVarName | quote }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ $secretName }}
+                  name: {{ $fullName }}
                   key: {{ $secretKey }}
               {{- end }}
             {{- end }}
