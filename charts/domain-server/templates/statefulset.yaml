@@ -3,7 +3,10 @@
 {{- $dsRegistrationCredentialsFound := false }}
 {{- $hasVolumeSecret := false }}
 {{- $fullName := include "domain-server.fullname" . }}
-{{- $secretName := .Values.secretName }}
+{{- $secretName := .Values.existingSecretName }}
+{{- if or (eq .Values.useExistingSecret false) (empty .Values.existingSecretName) }}
+{{- $secretName = $fullName }}
+{{- end }}
 {{- range $secretKey, $secretConfig := $secrets }}
   {{- if eq $secretConfig.as "volume" }}
     {{- $hasVolumeSecret = true }}

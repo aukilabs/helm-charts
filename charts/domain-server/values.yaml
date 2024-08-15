@@ -78,7 +78,7 @@ monitoring:
     scrapeInterval: 10s
 
 useExistingSecret: false
-secretName: domain-server
+existingSecretName: ""
 secretFile:
   privateKey: ""
   postgresUrl: "postgres://domain-server:domain-server@domain-server-postgresql:5432/domain-server?sslmode=disable"
