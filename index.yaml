@@ -2,6 +2,25 @@ apiVersion: v1
 entries:
   domain-server:
   - apiVersion: v2
+    appVersion: "0.3"
+    created: "2024-08-15T06:19:57.797508777Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 15.4.2
+    description: The Domain Server is responsible for storing poses of portals in
+      domains and spatial domain data such as scene reconstructions and occupancy
+      maps.
+    digest: 5e03fd55d88ce813590e83699ce5a5858d5304c9bf5458b6f1c0466e77cdbcb0
+    maintainers:
+    - name: dataviruset
+    name: domain-server
+    type: application
+    urls:
+    - https://github.com/aukilabs/helm-charts/releases/download/domain-server-0.2.0/domain-server-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
     appVersion: "0.2"
     created: "2024-08-09T05:59:13.82380904Z"
     dependencies:
@@ -79,4 +98,4 @@ entries:
     urls:
     - https://github.com/aukilabs/helm-charts/releases/download/hagall-0.1.0/hagall-0.1.0.tgz
     version: 0.1.0
-generated: "2024-08-09T05:59:13.823820652Z"
+generated: "2024-08-15T06:19:57.797522914Z"
