@@ -10,9 +10,9 @@ image:
 
 tolerations:
   # Needs to run on a GPU-enabled node
-  #- key: "dedicated"
-  #  value: "gpuGroup"
-  #  effect: "NoSchedule"
+  # - key: "dedicated"
+  #   value: "gpuGroup"
+  #   effect: "NoSchedule"
 
 nodeSelector: {}
 
