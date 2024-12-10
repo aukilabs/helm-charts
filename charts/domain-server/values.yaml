@@ -27,20 +27,19 @@ service:
       targetPort: 18190
       protocol: TCP
 ingress:
-  enabled: true
+  enabled: false
+  # className: nginx
   annotations:
-    # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
-    kubernetes.io/ingress.class: alb
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/group.name: default
-    alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
-    alb.ingress.kubernetes.io/healthcheck-port: admin
-    alb.ingress.kubernetes.io/healthcheck-path: /health
   path: /
   pathType: Prefix
   servicePort: http
+  # hosts:
+  #   - chart-example.local
+  # tls:
+  #   - secretName: chart-example-tls
+  #     hosts:
+  #       - chart-example.local
 envVars:
   DS_ADDR: ":8080"
   DS_ADMIN_ADDR: ":18190"
