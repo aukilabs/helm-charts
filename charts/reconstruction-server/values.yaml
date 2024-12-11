@@ -18,6 +18,18 @@ nodeSelector: {}
 
 affinity: {}
 
+# These are the recommended resources for good performance.
+# We have left them commented out as they might differ between workloads
+# and some users might prefer not configuring them at all because they
+# have set up dedicated nodes for the reconstruction-server.
+# resources:
+#   limits:
+#     memory: 7Gi
+#     cpu: 8
+#   requests:
+#     memory: 7Gi
+#     cpu: 6
+
 containerPorts:
   app:
     port: 8080
@@ -52,14 +64,6 @@ ingress:
   #   - secretName: chart-example-tls
   #     hosts:
   #       - chart-example.local
-
-resources:
-  limits:
-    memory: 7Gi
-    cpu: 8
-  requests:
-    memory: 7Gi
-    cpu: 6
 
 monitoring:
   namespace: monitoring
