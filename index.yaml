@@ -155,4 +155,18 @@ entries:
     urls:
     - https://github.com/aukilabs/helm-charts/releases/download/hagall-0.1.0/hagall-0.1.0.tgz
     version: 0.1.0
-generated: "2024-12-10T08:56:23.867830776Z"
+  reconstruction-server:
+  - apiVersion: v2
+    appVersion: 0.1.33
+    created: "2024-12-12T07:07:28.613175325Z"
+    description: The Reconstruction Server runs local and global refinement pipelines
+      for scene reconstruction, pose refinement and more.
+    digest: cbe4823ceb0d0db1c4dd3dd346a0cd98db468fb4847d8eabee7cbd74ca0a0c52
+    maintainers:
+    - name: dataviruset
+    name: reconstruction-server
+    type: application
+    urls:
+    - https://github.com/aukilabs/helm-charts/releases/download/reconstruction-server-0.0.1/reconstruction-server-0.0.1.tgz
+    version: 0.0.1
+generated: "2024-12-12T07:07:28.614679356Z"
