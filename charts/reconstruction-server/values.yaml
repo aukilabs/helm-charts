@@ -30,6 +30,9 @@ affinity: {}
 #     memory: 7Gi
 #     cpu: 6
 
+# Set the /dev/shm (shared memory) size limit
+shmSizeLimit: 512Mi
+
 containerPorts:
   app:
     port: 8080

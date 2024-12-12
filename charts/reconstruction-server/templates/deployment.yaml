@@ -56,6 +56,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-        - emptyDir:
+        - name: shm
+          emptyDir:
             medium: Memory
-          name: shm
+            sizeLimit: {{ .Values.shmSizeLimit }}
