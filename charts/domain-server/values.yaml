@@ -49,6 +49,7 @@ envVars:
   DS_OPERATION_MODE: "public"
   DS_STORAGE_LOCAL_PATH: "./data/domain-data"
   DS_WALLET_PRIVATE_KEY_FILE_PATH: "/private-key-volume/wallet-private.key"
+  # DS_RECONSTRUCTION_SERVER_URL: "https://reconstruction-server.example.com"
 secrets:
   domain-server:
     as: environment
@@ -57,6 +58,8 @@ secrets:
         envVarName: DS_POSTGRES_URL
       registration_credentials:
         envVarName: DS_REGISTRATION_CREDENTIALS
+      # reconstruction_server_api_key:
+      #   envVarName: DS_RECONSTRUCTION_SERVER_API_KEY
   private-key-volume:
     as: volume
     mountPath: /private-key-volume
