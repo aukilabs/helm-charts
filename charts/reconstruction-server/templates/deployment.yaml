@@ -43,6 +43,9 @@ spec:
           volumeMounts:
             - name: shm
               mountPath: /dev/shm
+          args:
+            - "--api-key={{ .Values.apiKey }}"
+          # TODO: Change to env var + secret, or the reconstruction-server can validate domain access tokens instead
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

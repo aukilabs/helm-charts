@@ -33,6 +33,9 @@ affinity: {}
 # Set the /dev/shm (shared memory) size limit
 shmSizeLimit: 512Mi
 
+# Set an API key here and configure the DMT app or domain-server to use it
+apiKey: ""
+
 containerPorts:
   app:
     port: 8080
