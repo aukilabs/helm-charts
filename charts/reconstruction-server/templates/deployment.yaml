@@ -51,6 +51,8 @@ spec:
           volumeMounts:
             - name: shm
               mountPath: /dev/shm
+            - name: jobs
+              mountPath: /app/jobs
           args:
             - "--api-key={{ .Values.apiKey }}"
           # TODO: Change to env var + secret, or the reconstruction-server can validate domain access tokens instead
@@ -71,3 +73,5 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: {{ .Values.shmSizeLimit }}
+        - name: jobs
+          emptyDir: {}
