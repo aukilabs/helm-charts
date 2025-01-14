@@ -5,6 +5,14 @@ metadata:
   labels:
     {{- include "reconstruction-server.labels" . | nindent 4 }}
 spec:
+  {{- if .Values.deploymentStrategy.enabled }}
+  strategy:
+    type: {{ .Values.deploymentStrategy.type }}
+  {{- if and (eq .Values.deploymentStrategy.type "RollingUpdate") .Values.deploymentStrategy.rollingUpdate }}
+    rollingUpdate:
+  {{ toYaml .Values.deploymentStrategy.rollingUpdate | indent 6 }}
+  {{- end }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "reconstruction-server.selectorLabels" . | nindent 6 }}
@@ -43,6 +51,11 @@ spec:
           volumeMounts:
             - name: shm
               mountPath: /dev/shm
+            - name: jobs
+              mountPath: /app/jobs
+          args:
+            - "--api-key={{ .Values.apiKey }}"
+          # TODO: Change to env var + secret, or the reconstruction-server can validate domain access tokens instead
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -60,3 +73,5 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: {{ .Values.shmSizeLimit }}
+        - name: jobs
+          emptyDir: {}

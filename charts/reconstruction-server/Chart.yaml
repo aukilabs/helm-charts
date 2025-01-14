@@ -2,7 +2,7 @@ apiVersion: v2
 name: reconstruction-server
 description: The Reconstruction Server runs local and global refinement pipelines for scene reconstruction, pose refinement and more.
 type: application
-version: 0.0.2
-appVersion: "0.1.33"
+version: 0.0.3
+appVersion: "0.1.35"
 maintainers:
   - name: dataviruset
