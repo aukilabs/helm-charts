@@ -5,6 +5,14 @@ metadata:
   labels:
     {{- include "reconstruction-server.labels" . | nindent 4 }}
 spec:
+  {{- if .Values.deploymentStrategy.enabled }}
+  strategy:
+    type: {{ .Values.deploymentStrategy.type }}
+  {{- if and (eq .Values.deploymentStrategy.type "RollingUpdate") .Values.deploymentStrategy.rollingUpdate }}
+    rollingUpdate:
+  {{ toYaml .Values.deploymentStrategy.rollingUpdate | indent 6 }}
+  {{- end }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "reconstruction-server.selectorLabels" . | nindent 6 }}

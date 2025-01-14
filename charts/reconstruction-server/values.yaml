@@ -98,3 +98,7 @@ securityContext:
   readOnlyRootFilesystem: true
   runAsNonRoot: true
   runAsUser: 1000
+
+deploymentStrategy:
+  enabled: true
+  type: Recreate
