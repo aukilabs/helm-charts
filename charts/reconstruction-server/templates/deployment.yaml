@@ -53,6 +53,10 @@ spec:
               mountPath: /dev/shm
             - name: jobs
               mountPath: /app/jobs
+            - name: home
+              mountPath: /home/reconstruction-server
+            - name: tmp
+              mountPath: /tmp
           args:
             - "--api-key={{ .Values.apiKey }}"
           # TODO: Change to env var + secret, or the reconstruction-server can validate domain access tokens instead
@@ -74,4 +78,8 @@ spec:
             medium: Memory
             sizeLimit: {{ .Values.shmSizeLimit }}
         - name: jobs
+          emptyDir: {}
+        - name: home
+          emptyDir: {}
+        - name: tmp
           emptyDir: {}
