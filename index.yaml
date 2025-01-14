@@ -3,6 +3,25 @@ entries:
   domain-server:
   - apiVersion: v2
     appVersion: "0.5"
+    created: "2025-01-14T10:28:12.873067779Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 15.4.2
+    description: The Domain Server is responsible for storing poses of portals in
+      domains and spatial domain data such as scene reconstructions and occupancy
+      maps.
+    digest: be3606d60cda9c3bbf07a88c85c767f87db16425da5ad703ef88cf5ad3992d3a
+    maintainers:
+    - name: dataviruset
+    name: domain-server
+    type: application
+    urls:
+    - https://github.com/aukilabs/helm-charts/releases/download/domain-server-0.3.1/domain-server-0.3.1.tgz
+    version: 0.3.1
+  - apiVersion: v2
+    appVersion: "0.5"
     created: "2024-12-10T08:56:23.867787325Z"
     dependencies:
     - condition: postgresql.enabled
@@ -157,6 +176,19 @@ entries:
     version: 0.1.0
   reconstruction-server:
   - apiVersion: v2
+    appVersion: 0.1.35
+    created: "2025-01-14T10:28:12.976834258Z"
+    description: The Reconstruction Server runs local and global refinement pipelines
+      for scene reconstruction, pose refinement and more.
+    digest: 301f2d152faed1af826fecf7c3788d325970c4d684aeeaf74928b862acaf5039
+    maintainers:
+    - name: dataviruset
+    name: reconstruction-server
+    type: application
+    urls:
+    - https://github.com/aukilabs/helm-charts/releases/download/reconstruction-server-0.0.3/reconstruction-server-0.0.3.tgz
+    version: 0.0.3
+  - apiVersion: v2
     appVersion: 0.1.33
     created: "2024-12-12T07:24:51.887241065Z"
     description: The Reconstruction Server runs local and global refinement pipelines
@@ -182,4 +214,4 @@ entries:
     urls:
     - https://github.com/aukilabs/helm-charts/releases/download/reconstruction-server-0.0.1/reconstruction-server-0.0.1.tgz
     version: 0.0.1
-generated: "2024-12-12T07:24:51.887267695Z"
+generated: "2025-01-14T10:28:12.976885654Z"
