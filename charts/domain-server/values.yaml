@@ -31,6 +31,10 @@ ingress:
   # className: nginx
   annotations:
     # kubernetes.io/tls-acme: "true"
+
+    # CORS is needed for backup/restore functionality to work,
+    # make sure to configure this for whatever ingress provider you use.
+    nginx.ingress.kubernetes.io/enable-cors: "true"
   path: /
   pathType: Prefix
   servicePort: http
