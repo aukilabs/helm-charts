@@ -31,6 +31,13 @@ ingress:
   # className: nginx
   annotations:
     # kubernetes.io/tls-acme: "true"
+
+    # CORS is needed for backup/restore functionality to work,
+    # make sure to configure this for whatever ingress provider you use.
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+
+    # Increase proxy body size to allow for large domain data uploads (or backup restores).
+    nginx.ingress.kubernetes.io/proxy-body-size: "10G"
   path: /
   pathType: Prefix
   servicePort: http
