@@ -12,7 +12,7 @@ envVars:
   DS_DEFAULT_REQUEST_TIMEOUT: "600s" # 10 minutes
   DS_STREAM_REQUEST_TIMEOUT: "600s" # 10 minutes
   DS_LOG_LEVEL: "info"
-  # configre the rest of the env vars as needed
+  # configure the rest of the env vars as needed
 affinity:
   podAntiAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
