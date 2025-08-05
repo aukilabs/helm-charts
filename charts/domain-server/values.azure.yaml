@@ -54,7 +54,7 @@ juicefs-s3-gateway:
     storage: "wasb"
     accessKey: "GET_FROM_AZURE"
     secretKey: "GET_FROM_AZURE"
-    bucket: "https://domainserver.core.windows.net"
+    bucket: "https://<abs_name>.core.windows.net"
   affinity:
     podAntiAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
