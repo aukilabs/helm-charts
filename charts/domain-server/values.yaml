@@ -26,16 +26,16 @@ service:
       port: 18190
       targetPort: 18190
       protocol: TCP
-#affinity:
-#  podAntiAffinity:
-#    requiredDuringSchedulingIgnoredDuringExecution:
-#      - labelSelector:
-#          matchExpressions:
-#            - key: app.kubernetes.io/name
-#              operator: In
-#              values:
-#                - domain-server-s3
-#        topologyKey: kubernetes.io/hostname
+# affinity:
+#   podAntiAffinity:
+#     requiredDuringSchedulingIgnoredDuringExecution:
+#       - labelSelector:
+#           matchExpressions:
+#             - key: app.kubernetes.io/name
+#               operator: In
+#               values:
+#                 - domain-server-s3
+#         topologyKey: kubernetes.io/hostname
 ingress:
   enabled: false
   # className: nginx
@@ -107,7 +107,8 @@ secretFile:
   privateKey: ""
   postgresUrl: "postgres://domain-server:domain-server@domain-server-postgresql:5432/domain-server?sslmode=disable"
   registrationCredentials: "MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwOmludmFsaWQ="
-
+emptyDir:
+  sizeLimit: "8Gi"
 persistentVolume:
   ## If true, create/use a Persistent Volume Claim
   ## If false, use emptyDir
@@ -128,11 +129,11 @@ persistentVolume:
 
   ## Persistent Volume labels
   ##
-  labels: {}
+  labels: { }
 
   ## Persistent Volume annotations
   ##
-  annotations: {}
+  annotations: { }
 
   ## Persistent Volume existing claim name
   ## Requires server.persistentVolume.enabled: true
@@ -208,7 +209,8 @@ juicefs-s3-gateway:
       memory: 1Gi
   replicaCount: 3
   image:
-    tag: "ce-v1.2.4" # https://github.com/juicedata/juicefs/releases
+    # https://github.com/juicedata/juicefs/releases
+    tag: "ce-v1.2.4"
   envs:
     - name: AZURE_STORAGE_CONNECTION_STRING
       # WARNING: This is a placeholder value. You MUST replace "REPLACE_WITH_ACTUAL_AZURE_STORAGE_CONNECTION_STRING"
