@@ -129,11 +129,11 @@ persistentVolume:
 
   ## Persistent Volume labels
   ##
-  labels: { }
+  labels: {}
 
   ## Persistent Volume annotations
   ##
-  annotations: { }
+  annotations: {}
 
   ## Persistent Volume existing claim name
   ## Requires server.persistentVolume.enabled: true
