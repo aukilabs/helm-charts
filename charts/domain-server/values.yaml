@@ -26,6 +26,16 @@ service:
       port: 18190
       targetPort: 18190
       protocol: TCP
+#affinity:
+#  podAntiAffinity:
+#    requiredDuringSchedulingIgnoredDuringExecution:
+#      - labelSelector:
+#          matchExpressions:
+#            - key: app.kubernetes.io/name
+#              operator: In
+#              values:
+#                - domain-server-s3
+#        topologyKey: kubernetes.io/hostname
 ingress:
   enabled: false
   # className: nginx
@@ -52,11 +62,15 @@ envVars:
   DS_ADMIN_ADDR: ":18190"
   DS_POSTGRES_TRACE_LEVEL: "none"
   DS_PUBLIC_URL: "https://domain-server.example.com"
-  DS_LOG_LEVEL: "debug"
+  DS_LOG_LEVEL: "info"
   DS_OPERATION_MODE: "public"
   DS_STORAGE_LOCAL_PATH: "./data/domain-data"
   DS_WALLET_PRIVATE_KEY_FILE_PATH: "/private-key-volume/wallet-private.key"
-  # DS_RECONSTRUCTION_SERVER_URL: "https://reconstruction-server.example.com"
+#  DS_POSTGRES_POOL_SIZE: "40" # Adjusted for 8vCPU database
+#  DS_ENABLE_EVENTS_UPLOADING: "false" # Disable events uploading for performance
+#  DS_DEFAULT_REQUEST_TIMEOUT: "600s" # 10 minutes
+#  DS_STREAM_REQUEST_TIMEOUT: "600s" # 10 minutes
+#  DS_RECONSTRUCTION_SERVER_URL: "https://reconstruction-server.example.com"
 secrets:
   domain-server:
     as: environment
@@ -183,5 +197,39 @@ securityContext:
   runAsGroup: 101
   runAsUser: 100
 
-juicefs:
+juicefs-s3-gateway:
   enabled: false
+  resources:
+    limits:
+      cpu: 5
+      memory: 5Gi
+    requests:
+      cpu: 1
+      memory: 1Gi
+  replicaCount: 3
+  image:
+    tag: "ce-v1.2.4" # https://github.com/juicedata/juicefs/releases
+  envs:
+    - name: AZURE_STORAGE_CONNECTION_STRING
+      # WARNING: This is a placeholder value. You MUST replace "REPLACE_WITH_ACTUAL_AZURE_STORAGE_CONNECTION_STRING"
+      # with your actual Azure Storage connection string before deploying to production.
+      value: "REPLACE_WITH_ACTUAL_AZURE_STORAGE_CONNECTION_STRING"
+  secret:
+    enabled: true
+    name: "domainserver"
+    metaurl: "rediss://:REPLACE_ME_REDIS_PASSWORD=@REPLACE_ME_REDIS_NAME.redis.cache.windows.net:6380/0"
+    storage: "wasb"
+    accessKey: "GET_FROM_AZURE"
+    secretKey: "GET_FROM_AZURE"
+    bucket: "https://<abs_name>.core.windows.net"
+#  affinity:
+#    podAntiAffinity:
+#      requiredDuringSchedulingIgnoredDuringExecution:
+#        - labelSelector:
+#            matchExpressions:
+#              - key: app.kubernetes.io/name
+#                operator: In
+#                values:
+#                  - juicefs-s3-gateway
+#          topologyKey: kubernetes.io/hostname
+#
