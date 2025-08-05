@@ -46,7 +46,9 @@ juicefs-s3-gateway:
     tag: "ce-v1.2.4" # https://github.com/juicedata/juicefs/releases
   envs:
     - name: AZURE_STORAGE_CONNECTION_STRING
-      value: "GET_FROM_AZURE"
+      # WARNING: This is a placeholder value. You MUST replace "REPLACE_WITH_ACTUAL_AZURE_STORAGE_CONNECTION_STRING"
+      # with your actual Azure Storage connection string before deploying to production.
+      value: "REPLACE_WITH_ACTUAL_AZURE_STORAGE_CONNECTION_STRING"
   secret:
     enabled: true
     name: "domainserver"
