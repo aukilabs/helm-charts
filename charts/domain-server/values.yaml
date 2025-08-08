@@ -4,6 +4,7 @@ containerImage:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 applicationName: domain-server
+forceStatefulSet: false
 tolerations:
   - key: "dedicated"
     value: "armGroup"

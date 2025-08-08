@@ -1,3 +1,4 @@
+{{- if and (index .Values "juicefs-s3-gateway" "enabled") (eq .Values.forceStatefulSet false) }}
 {{- $secrets := .Values.secrets }}
 {{- $dsPostgresURLFound := false }}
 {{- $dsRegistrationCredentialsFound := false }}
@@ -12,7 +13,6 @@
     {{- $hasVolumeSecret = true }}
   {{- end }}
 {{- end }}
-{{- if (index .Values "juicefs-s3-gateway" "enabled") }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
