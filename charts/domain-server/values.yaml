@@ -67,8 +67,8 @@ envVars:
   DS_OPERATION_MODE: "public"
   DS_STORAGE_LOCAL_PATH: "./data/domain-data"
   DS_WALLET_PRIVATE_KEY_FILE_PATH: "/private-key-volume/wallet-private.key"
-#  DS_POSTGRES_POOL_SIZE: "40" # Adjusted for 8vCPU database
-#  DS_ENABLE_EVENTS_UPLOADING: "false" # Disable events uploading for performance
+#  DS_POSTGRES_POOL_SIZE: "40" # Reference value for a database instance with 8 vCPUs
+#  DS_ENABLE_EVENTS_UPLOADING: "false" # Event uploading can optionally be disabled here to increase performance
 #  DS_DEFAULT_REQUEST_TIMEOUT: "600s" # 10 minutes
 #  DS_STREAM_REQUEST_TIMEOUT: "600s" # 10 minutes
 #  DS_RECONSTRUCTION_SERVER_URL: "https://reconstruction-server.example.com"
@@ -201,13 +201,6 @@ securityContext:
 
 juicefs-s3-gateway:
   enabled: false
-  resources:
-    limits:
-      cpu: 5
-      memory: 5Gi
-    requests:
-      cpu: 1
-      memory: 1Gi
   replicaCount: 3
   image:
     # https://github.com/juicedata/juicefs/releases
