@@ -212,7 +212,7 @@ juicefs-s3-gateway:
       value: "REPLACE_WITH_ACTUAL_AZURE_STORAGE_CONNECTION_STRING"
   secret:
     enabled: true
-    name: "domainserver"
+    name: "domain-server"
     metaurl: "rediss://:REPLACE_ME_REDIS_PASSWORD=@REPLACE_ME_REDIS_NAME.redis.cache.windows.net:6380/0"
     storage: "wasb"
     accessKey: "GET_FROM_AZURE"
