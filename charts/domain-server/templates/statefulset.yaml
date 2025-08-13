@@ -1,7 +1,5 @@
 {{- if or (eq .Values.forceStatefulSet true) (eq (index .Values "juicefs-s3-gateway" "enabled") false) }}
 {{- $secrets := .Values.secrets }}
-{{- $dsPostgresURLFound := false }}
-{{- $dsRegistrationCredentialsFound := false }}
 {{- $hasVolumeSecret := false }}
 {{- $fullName := include "domain-server.fullname" . }}
 {{- $secretName := .Values.existingSecretName }}
