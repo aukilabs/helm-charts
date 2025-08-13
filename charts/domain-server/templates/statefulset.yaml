@@ -74,13 +74,16 @@ spec:
             - name: {{ $key }}
               value: {{ quote $value }}
           {{- end }}
-          {{- range $secretConfig := $secrets }}
-            {{- if or (eq $secretConfig.as "environment") (eq $secretConfig.as "csi") }} 
+          {{- range $secretSource, $secretConfig := $secrets }}
+            {{- if eq $secretSource "domain-server" }}
+              {{ $secretSource = $secretName }}
+            {{- end }}
+            {{- if or (eq $secretConfig.as "environment") (eq $secretConfig.as "csi") }}
               {{- range $secretKey, $keyEnvVarConfig := $secretConfig.items }}
             - name: {{ required "envVarName is required on secrets items when using environment or csi" $keyEnvVarConfig.envVarName | quote }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ $secretName }}
+                  name: {{ $secretSource }}
                   key: {{ $secretKey }}
               {{- end }}
             {{- end }}
