@@ -180,7 +180,6 @@ persistentVolume:
   ##
   # volumeName: ""
 
-# See https://github.com/bitnami/charts/blob/postgresql/15.4.2/bitnami/postgresql/values.yaml
 postgresql:
   # If true, the PostgreSQL dependency is enabled
   enabled: true
@@ -200,36 +199,5 @@ securityContext:
   runAsGroup: 101
   runAsUser: 100
 
-# See https://github.com/juicedata/charts/blob/helm-chart-juicefs-s3-gateway-0.11.3/charts/juicefs-s3-gateway/values.yaml
 juicefs-s3-gateway:
   enabled: false
-  replicaCount: 3
-  image:
-    # https://github.com/juicedata/juicefs/releases
-    tag: "ce-v1.2.4"
-  envs:
-    - name: AZURE_STORAGE_CONNECTION_STRING
-      # WARNING: This is a placeholder value. You MUST replace "REPLACE_WITH_ACTUAL_AZURE_STORAGE_CONNECTION_STRING"
-      # with your actual Azure Storage connection string before deploying to production.
-      value: "REPLACE_WITH_ACTUAL_AZURE_STORAGE_CONNECTION_STRING"
-  secret:
-    # true creates a secret called "juicefs-secret", use false if you want to create it yourself
-    enabled: true
-    # The JuiceFS file system name.
-    name: "domain-server"
-    metaurl: "rediss://:REPLACE_ME_REDIS_PASSWORD=@REPLACE_ME_REDIS_NAME.redis.cache.windows.net:6380/0"
-    storage: "wasb"
-    accessKey: "GET_FROM_AZURE"
-    secretKey: "GET_FROM_AZURE"
-    bucket: "https://<abs_name>.core.windows.net"
-#  affinity:
-#    podAntiAffinity:
-#      requiredDuringSchedulingIgnoredDuringExecution:
-#        - labelSelector:
-#            matchExpressions:
-#              - key: app.kubernetes.io/name
-#                operator: In
-#                values:
-#                  - juicefs-s3-gateway
-#          topologyKey: kubernetes.io/hostname
-#
