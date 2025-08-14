@@ -4,6 +4,7 @@ containerImage:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 applicationName: domain-server
+forceStatefulSet: false
 tolerations:
   - key: "dedicated"
     value: "armGroup"
@@ -26,6 +27,16 @@ service:
       port: 18190
       targetPort: 18190
       protocol: TCP
+# affinity:
+#   podAntiAffinity:
+#     requiredDuringSchedulingIgnoredDuringExecution:
+#       - labelSelector:
+#           matchExpressions:
+#             - key: app.kubernetes.io/name
+#               operator: In
+#               values:
+#                 - domain-server-s3
+#         topologyKey: kubernetes.io/hostname
 ingress:
   enabled: false
   # className: nginx
@@ -52,11 +63,15 @@ envVars:
   DS_ADMIN_ADDR: ":18190"
   DS_POSTGRES_TRACE_LEVEL: "none"
   DS_PUBLIC_URL: "https://domain-server.example.com"
-  DS_LOG_LEVEL: "debug"
+  DS_LOG_LEVEL: "info"
   DS_OPERATION_MODE: "public"
   DS_STORAGE_LOCAL_PATH: "./data/domain-data"
   DS_WALLET_PRIVATE_KEY_FILE_PATH: "/private-key-volume/wallet-private.key"
-  # DS_RECONSTRUCTION_SERVER_URL: "https://reconstruction-server.example.com"
+#  DS_POSTGRES_POOL_SIZE: "40" # Reference value for a database instance with 8 vCPUs
+#  DS_ENABLE_EVENTS_UPLOADING: "false" # Event uploading can optionally be disabled here to increase performance
+#  DS_DEFAULT_REQUEST_TIMEOUT: "600s" # 10 minutes
+#  DS_STREAM_REQUEST_TIMEOUT: "600s" # 10 minutes
+#  DS_RECONSTRUCTION_SERVER_URL: "https://reconstruction-server.example.com"
 secrets:
   domain-server:
     as: environment
@@ -93,7 +108,8 @@ secretFile:
   privateKey: ""
   postgresUrl: "postgres://domain-server:domain-server@domain-server-postgresql:5432/domain-server?sslmode=disable"
   registrationCredentials: "MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwOmludmFsaWQ="
-
+emptyDir:
+  sizeLimit: "8Gi"
 persistentVolume:
   ## If true, create/use a Persistent Volume Claim
   ## If false, use emptyDir
@@ -182,3 +198,6 @@ securityContext:
   fsGroup: 101
   runAsGroup: 101
   runAsUser: 100
+
+juicefs-s3-gateway:
+  enabled: false
