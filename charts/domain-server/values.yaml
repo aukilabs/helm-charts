@@ -201,3 +201,4 @@ securityContext:
 
 juicefs-s3-gateway:
   enabled: false
+  # https://github.com/juicedata/charts/blob/main/charts/juicefs-s3-gateway/values.yaml
