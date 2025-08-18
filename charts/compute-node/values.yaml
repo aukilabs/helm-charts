@@ -59,6 +59,7 @@ postgresql:
     networkPolicy:
       enabled: false
     resources: {}
+  fullnameOverride: ""
 
 # Storage configuration
 storage:
