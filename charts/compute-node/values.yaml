@@ -25,6 +25,10 @@ server:
   # Extra env vars
   env: {}
   enableProbes: true
+  postgresql:
+    # Here you can override the connection string, for example if you want to use
+    # a PostgreSQL instance not managed by this chart (postgresql.enabled=false below)
+    url: ""
 
 # UI configuration
 ui:
@@ -39,18 +43,18 @@ ui:
   enableProbes: true
 
 # Database configuration
+# See https://github.com/bitnami/charts/blob/postgresql/15.4.2/bitnami/postgresql/values.yaml
 postgresql:
+  enabled: true
   # If true, the PostgreSQL dependency is enabled
-  enabled: false
-  url: "placeholder"
   global:
     # defaultStorageClass: ""
     postgresql:
       auth:
-        # The defaults are the name of the Helm deployment
-        # username: deployment-name
-        # password: deployment-name
-        # database: deployment-name
+        # It's recommended to change to something more secure
+        username: compute-node
+        password: compute-node
+        database: compute-node
   primary:
     networkPolicy:
       enabled: false
