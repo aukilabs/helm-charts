@@ -12,7 +12,7 @@ server:
   enabled: true
   replicas: 1
   image:
-    repository: ""
+    # repository: ""
     tag: "latest"
     pullPolicy: Always
   resources: {}
@@ -31,7 +31,7 @@ ui:
   replicas: 1
   port: 3000
   image:
-    repository: ""
+    # repository: ""
     tag: "latest"
     pullPolicy: Always
   resources: {}
@@ -57,14 +57,23 @@ postgresql:
 # Storage configuration
 storage:
   enabled: true
-  storageClass: ""
+  # storageClass: ""
   size: "100Gi"
   accessMode: ReadWriteOnce
   mountPath: /data
 
 # Ingress configuration
 ingress:
-  enabled: true
+  enabled: false
+  # className: nginx
+  annotations:
+    # kubernetes.io/tls-acme: "true"
+  # hosts:
+  #   - chart-example.local
+  # tls:
+  #   - secretName: chart-example-tls
+  #     hosts:
+  #       - chart-example.local
 
 # Service configuration
 service:
