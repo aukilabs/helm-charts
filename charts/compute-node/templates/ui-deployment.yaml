@@ -30,6 +30,7 @@ spec:
           protocol: TCP
         resources:
           {{- toYaml .Values.ui.resources | nindent 10 }}
+        {{- if .Values.ui.enableProbes }}
         livenessProbe:
           httpGet:
             path: /
@@ -42,4 +43,5 @@ spec:
             port: {{ .Values.ui.port | default 3000 }}
           initialDelaySeconds: 5
           periodSeconds: 5
+        {{- end }}
 {{- end }}

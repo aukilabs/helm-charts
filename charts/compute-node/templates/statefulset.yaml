@@ -51,6 +51,7 @@ spec:
         volumeMounts:
         - name: data
           mountPath: {{ .Values.storage.mountPath }}
+        {{- if .Values.server.enableProbes }}
         livenessProbe:
           httpGet:
             path: /health
@@ -63,6 +64,7 @@ spec:
             port: admin
           initialDelaySeconds: 5
           periodSeconds: 5
+        {{- end }}
       volumes:
       - name: data
         persistentVolumeClaim:

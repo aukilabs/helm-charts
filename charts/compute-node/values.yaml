@@ -24,6 +24,7 @@ server:
   extraConfig: {}
   # Extra env vars
   env: {}
+  enableProbes: true
 
 # UI configuration
 ui:
@@ -35,6 +36,7 @@ ui:
     tag: "latest"
     pullPolicy: Always
   resources: {}
+  enableProbes: true
 
 # Database configuration
 postgresql:
