@@ -82,10 +82,11 @@ service:
 
 # Security configuration
 security:
-  createSecret: false
-  existingSecretName: ""
+  createSecret: true
   appKey: "changeme"
   appSecret: "changeme"
+  # Or use an existing secret:
+  # existingSecretName: ""
 
 # Labels and annotations
 labels: {}
