@@ -9,3 +9,6 @@ dependencies:
     version: "15.4.2"
     repository: "https://charts.bitnami.com/bitnami"
     condition: postgresql.enabled
+maintainers:
+  - name: dataviruset
+  - name: shuning-auki
