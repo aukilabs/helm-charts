@@ -89,6 +89,7 @@ service:
 # Security configuration
 security:
   createSecret: true
+  # Obtained from the Auki console (console.auki.network)
   appKey: "changeme"
   appSecret: "changeme"
   # Or use an existing secret:
