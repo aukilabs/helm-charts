@@ -1,12 +1,12 @@
 {{- if and (eq .Values.kind "Deployment") .Values.autoscaling.hpa.enabled }}
-apiVersion: autoscaling/v1
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "domain-server.fullname" . }}
   labels:
     {{- include "domain-server.labels" . | nindent 4 }}
-{{- if .Values.service.annotations }}
-{{- with .Values.service.annotations }}
+{{- if .Values.autoscaling.hpa.annotations }}
+{{- with .Values.autoscaling.hpa.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}

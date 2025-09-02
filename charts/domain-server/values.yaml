@@ -211,6 +211,7 @@ persistentVolume:
         updateMode: Auto
     hpa:
       enabled: false
+      annotations: {}
       minReplicas: ""
       maxReplicas: ""
       ## Target CPU utilization percentage

@@ -5,8 +5,8 @@ metadata:
   name: {{ include "domain-server.fullname" . }}
   labels:
     {{- include "domain-server.labels" . | nindent 4 }}
-{{- if .Values.service.annotations }}
-{{- with .Values.service.annotations }}
+{{- if .Values.autoscaling.vpa.annotations }}
+{{- with .Values.autoscaling.vpa.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
