@@ -9,13 +9,13 @@ jobs:
       max-parallel: 4
       matrix:
         # https://github.com/kubernetes-sigs/kind/releases
-        kind_version: [v0.20.0]
-        k8s_version: [v1.28.0, v1.27.3, v1.26.6, v1.25.11, v1.24.15, v1.23.17, v1.22.17, v1.21.14]
+        kind_version: [v0.30.0]
+        k8s_version: [v1.34.0, v1.33.4, v1.32.8, v1.31.12]
         include:
-          - kind_version: v0.17.0
-            k8s_version: v1.20.15
-          - kind_version: v0.17.0
-            k8s_version: v1.19.16
+          - kind_version: v0.22.0
+            k8s_version: v1.29.2
+          - kind_version: v0.22.0
+            k8s_version: v1.23.17
     steps:
       - name: Checkout
         uses: actions/checkout@v3
