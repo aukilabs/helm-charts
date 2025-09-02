@@ -4,7 +4,12 @@ containerImage:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 applicationName: domain-server
-forceStatefulSet: false
+# kind can be StatefulSet or Deployment
+# Deployment requires an S3-compatible storage backend to be configured and
+# we recommend also enabling juicefs-s3-gateway. With JuiceFS, other non-S3 backends
+# can be used. See juicefs-s3-gateway section below.
+kind: StatefulSet
+replicaCount: 2 # only applicable for Deployment kind
 tolerations:
   - key: "dedicated"
     value: "armGroup"

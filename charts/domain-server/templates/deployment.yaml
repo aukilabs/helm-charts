@@ -1,4 +1,4 @@
-{{- if and (index .Values "juicefs-s3-gateway" "enabled") (eq .Values.forceStatefulSet false) }}
+{{- if eq .Values.kind "Deployment" }}
 {{- $secrets := .Values.secrets }}
 {{- $hasVolumeSecret := false }}
 {{- $fullName := include "domain-server.fullname" . }}
