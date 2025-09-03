@@ -3,12 +3,23 @@ containerImage:
   repository: aukilabs/domain-server
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
+
 applicationName: domain-server
-forceStatefulSet: false
+
+# kind can be StatefulSet or Deployment
+# Deployment requires an S3-compatible storage backend to be configured and
+# we recommend also enabling juicefs-s3-gateway. With JuiceFS, other non-S3 backends
+# can be used. See juicefs-s3-gateway section below.
+kind: StatefulSet
+
+# only applicable for Deployment kind
+replicaCount: 2
+
 tolerations:
   - key: "dedicated"
     value: "armGroup"
     effect: "NoSchedule"
+
 containerPorts:
   http:
     port: 8080
@@ -16,6 +27,7 @@ containerPorts:
   admin:
     port: 18190
     protocol: TCP
+
 service:
   enabled: true
   ports:
@@ -27,6 +39,7 @@ service:
       port: 18190
       targetPort: 18190
       protocol: TCP
+
 # affinity:
 #   podAntiAffinity:
 #     requiredDuringSchedulingIgnoredDuringExecution:
@@ -37,6 +50,7 @@ service:
 #               values:
 #                 - domain-server-s3
 #         topologyKey: kubernetes.io/hostname
+
 ingress:
   enabled: false
   # className: nginx
@@ -58,6 +72,7 @@ ingress:
   #   - secretName: chart-example-tls
   #     hosts:
   #       - chart-example.local
+
 envVars:
   DS_ADDR: ":8080"
   DS_ADMIN_ADDR: ":18190"
@@ -72,6 +87,7 @@ envVars:
 #  DS_DEFAULT_REQUEST_TIMEOUT: "600s" # 10 minutes
 #  DS_STREAM_REQUEST_TIMEOUT: "600s" # 10 minutes
 #  DS_RECONSTRUCTION_SERVER_URL: "https://reconstruction-server.example.com"
+
 secrets:
   domain-server:
     as: environment
@@ -96,6 +112,7 @@ containerResources:
   requests:
     memory: 256Mi
     cpu: 1
+
 monitoring:
   namespace: monitoring
   podMonitor:
@@ -179,6 +196,42 @@ persistentVolume:
   ## Useful if Persistent Volumes have been provisioned in advance and you want to use a specific one
   ##
   # volumeName: ""
+
+  ## Autoscaling configuration
+  ## ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+  autoscaling:
+    vpa:
+      enabled: false
+      annotations: {}
+      ## List of resources that the vertical pod autoscaler can control. Defaults to cpu and memory
+      ##
+      controlledResources: []
+      ## Max allowed resources for the pod
+      ## cpu: 200m
+      ## memory: 100Mi
+      maxAllowed: {}
+      ## Min allowed resources for the pod
+      ## cpu: 200m
+      ## memory: 100Mi
+      minAllowed: {}
+      ## VPA update policy
+      ##
+      updatePolicy:
+        ## Autoscaling update policy Specifies whether recommended updates are applied when a Pod is started and whether recommended updates are applied during the life of a Pod
+        ## Possible values are "Off", "Initial", "Recreate", and "Auto".
+        ##
+        updateMode: Auto
+    hpa:
+      enabled: false
+      annotations: {}
+      minReplicas: ""
+      maxReplicas: ""
+      ## Target CPU utilization percentage
+      ##
+      targetCPU: ""
+      ## Target Memory utilization percentage
+      ##
+      targetMemory: ""
 
 # See https://github.com/bitnami/charts/blob/postgresql/15.4.2/bitnami/postgresql/values.yaml
 postgresql:
