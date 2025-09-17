@@ -30,6 +30,20 @@ server:
     # a PostgreSQL instance not managed by this chart (postgresql.enabled=false below)
     url: ""
 
+worker:
+  enabled: true
+  replicas: 1
+  image:
+    # repository: ""
+    tag: "latest"
+    pullPolicy: Always
+  resources: {}
+  enableProbes: true
+  ports:
+    main: 8081
+  env: {}
+  extraConfig: {}
+
 # UI configuration
 ui:
   enabled: true
