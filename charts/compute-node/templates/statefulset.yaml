@@ -90,9 +90,9 @@ spec:
         {{- end }}
         envFrom:
         - configMapRef:
-            name: {{ include "vlm-node.configMapName" . }}
+            name: {{ include "compute-node.configMapName" . }}
         - secretRef:
-            name: {{ include "vlm-node.secretName" . }}
+            name: {{ include "compute-node.secretName" . }}
         resources:
           {{- toYaml .Values.worker.resources | nindent 10 }}
         volumeMounts:
