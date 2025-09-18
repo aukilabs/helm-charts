@@ -15,3 +15,6 @@ data:
   {{- with .Values.server.extraConfig }}
   {{- toYaml . | nindent 2 }}
   {{- end }}
+  {{- with .Values.worker.extraConfig }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}

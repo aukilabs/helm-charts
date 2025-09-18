@@ -11,12 +11,12 @@ spec:
   selector:
     matchLabels:
       {{- include "compute-node.nodeSelectorLabels" . | nindent 6 }}
-      app.kubernetes.io/component: server
+      app.kubernetes.io/component: compute-node
   template:
     metadata:
       labels:
         {{- include "compute-node.nodeSelectorLabels" . | nindent 8 }}
-        app.kubernetes.io/component: server
+        app.kubernetes.io/component: compute-node
     spec:
       {{- if .Values.serviceAccount.create }}
       serviceAccountName: {{ include "compute-node.serviceAccountName" . }}
@@ -26,7 +26,14 @@ spec:
         {{- toYaml .Values.server.tolerations | nindent 8 }}
       {{- end }}
       containers:
+      {{- if .Values.extraContainers }}
+      {{- toYaml .Values.extraContainers | nindent 6 }}
+      {{- end }}
       - name: server
+        securityContext:
+          fsGroup: 101
+          runAsGroup: 101
+          runAsUser: 100
         image: "{{ .Values.server.image.repository }}:{{ .Values.server.image.tag }}"
         imagePullPolicy: {{ .Values.server.image.pullPolicy }}
         ports:
@@ -62,6 +69,46 @@ spec:
           httpGet:
             path: /health
             port: admin
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        {{- end }}
+      - name: worker
+        image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag }}"
+        imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
+        securityContext:
+          fsGroup: 101
+          runAsGroup: 101
+          runAsUser: 100
+        ports:
+        - name: worker-http
+          containerPort: {{ .Values.worker.ports.main }}
+          protocol: TCP
+        env:
+        {{- range $key, $value := .Values.worker.env }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        envFrom:
+        - configMapRef:
+            name: {{ include "compute-node.configMapName" . }}
+        - secretRef:
+            name: {{ include "compute-node.secretName" . }}
+        resources:
+          {{- toYaml .Values.worker.resources | nindent 10 }}
+        volumeMounts:
+        - name: data
+          mountPath: {{ .Values.storage.mountPath }}
+        {{- if .Values.worker.enableProbes }}
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: worker-http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: worker-http
           initialDelaySeconds: 5
           periodSeconds: 5
         {{- end }}
