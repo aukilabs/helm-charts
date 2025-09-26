@@ -2,13 +2,13 @@ apiVersion: v2
 name: domain-server
 description: The Domain Server is responsible for storing poses of portals in domains and spatial domain data such as scene reconstructions and occupancy maps.
 type: application
-version: 0.5.0
+version: 0.5.1
 appVersion: "0.6"
 maintainers:
   - name: dataviruset
 dependencies:
   - name: postgresql
-    version: 15.4.2
+    version: 16.7.27
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
   - name: juicefs-s3-gateway
