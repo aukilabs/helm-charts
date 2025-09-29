@@ -3,6 +3,29 @@ entries:
   domain-server:
   - apiVersion: v2
     appVersion: "0.6"
+    created: "2025-09-29T04:22:09.505085833Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.7.27
+    - condition: juicefs-s3-gateway.enabled
+      name: juicefs-s3-gateway
+      repository: https://juicedata.github.io/charts/
+      version: 0.11.3
+    description: The Domain Server is responsible for storing poses of portals in
+      domains and spatial domain data such as scene reconstructions and occupancy
+      maps.
+    digest: 309e6411e9ee19eb3e492f40f9004abbe65d7f98b8905062c091999f3b77371d
+    maintainers:
+    - name: dataviruset
+    name: domain-server
+    type: application
+    urls:
+    - https://github.com/aukilabs/helm-charts/releases/download/domain-server-0.5.1/domain-server-0.5.1.tgz
+    version: 0.5.1
+  - apiVersion: v2
+    appVersion: "0.6"
     created: "2025-09-03T04:23:54.959385964Z"
     dependencies:
     - condition: postgresql.enabled
@@ -315,4 +338,4 @@ entries:
     urls:
     - https://github.com/aukilabs/helm-charts/releases/download/reconstruction-server-0.0.1/reconstruction-server-0.0.1.tgz
     version: 0.0.1
-generated: "2025-09-03T04:23:54.959444491Z"
+generated: "2025-09-29T04:22:09.505143662Z"
