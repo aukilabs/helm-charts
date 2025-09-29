@@ -233,10 +233,13 @@ persistentVolume:
       ##
       targetMemory: ""
 
-# See https://github.com/bitnami/charts/blob/postgresql/15.4.2/bitnami/postgresql/values.yaml
+# See https://github.com/bitnami/charts/blob/postgresql/16.7.27/bitnami/postgresql/values.yaml
 postgresql:
   # If true, the PostgreSQL dependency is enabled
   enabled: true
+  image:
+    # https://github.com/bitnami/containers/issues/83267
+    repository: bitnamilegacy/postgresql
   global:
     postgresql:
       auth:
