@@ -4,7 +4,7 @@ fullnameOverride: ""
 
 image:
   pullPolicy: IfNotPresent
-  repository: 026987513085.dkr.ecr.us-east-1.amazonaws.com/reconstruction-server
+  repository: aukilabs/reconstruction-node
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
