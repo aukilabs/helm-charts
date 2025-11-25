@@ -44,10 +44,22 @@ spec:
               containerPort: {{ int $portSpec.port }}
               protocol: {{ $portSpec.protocol }}
             {{- end }}
+          {{- if .Values.resources }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          {{- end }}
+          {{- if .Values.envFrom }}
+          envFrom:
+            {{- toYaml .Values.envFrom | nindent 12 }}
+          {{- end }}
+          {{- $env := list }}
+          {{- range .Values.extraEnv }}
+          {{- $env = append $env . }}
+          {{- end }}
+          {{- if $env }}
           env:
-            {{- toYaml .Values.extraEnv | nindent 12 }}
+            {{- toYaml $env | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: shm
               mountPath: /dev/shm
@@ -57,9 +69,10 @@ spec:
               mountPath: /home/reconstruction-server
             - name: tmp
               mountPath: /tmp
+          {{- if .Values.apiKey }}
           args:
             - "--api-key={{ .Values.apiKey }}"
-          # TODO: Change to env var + secret, or the reconstruction-server can validate domain access tokens instead
+          {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

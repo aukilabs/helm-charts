@@ -8,6 +8,12 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
+# Extra environment variables (non-secret)
+extraEnv: []
+
+# Optional envFrom entries (e.g. secrets or configmaps)
+envFrom: []
+
 tolerations:
   # Needs to run on a GPU-enabled node
   # - key: "dedicated"
@@ -33,7 +39,7 @@ affinity: {}
 # Set the /dev/shm (shared memory) size limit
 shmSizeLimit: 512Mi
 
-# Set an API key here and configure the DMT app or domain-server to use it
+# Optional API key argument, used by go reconstruction server.
 apiKey: ""
 
 containerPorts:
