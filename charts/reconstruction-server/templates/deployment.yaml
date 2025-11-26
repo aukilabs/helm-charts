@@ -53,8 +53,8 @@ spec:
             {{- toYaml .Values.envFrom | nindent 12 }}
           {{- end }}
           {{- $env := list }}
-          {{- range .Values.extraEnv }}
-          {{- $env = append $env . }}
+          {{- range $k := sortAlpha (keys .Values.extraEnvMap) }}
+          {{- $env = append $env (dict "name" $k "value" (index $.Values.extraEnvMap $k)) }}
           {{- end }}
           {{- if $env }}
           env:

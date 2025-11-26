@@ -8,8 +8,8 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
-# Extra environment variables (non-secret)
-extraEnv: []
+# Extra environment variables (non-secret), keyed by name for deterministic merging
+extraEnvMap: {}
 
 # Optional envFrom entries (e.g. secrets or configmaps)
 envFrom: []
