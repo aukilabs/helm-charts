@@ -39,7 +39,7 @@ affinity: {}
 # Set the /dev/shm (shared memory) size limit
 shmSizeLimit: 512Mi
 
-# Optional API key argument, used by go reconstruction server.
+# Deprecated: only used by reconstruction-server versions <=0.2.0.
 apiKey: ""
 
 containerPorts:
