@@ -7,9 +7,11 @@ containerImage:
 applicationName: domain-server
 
 # kind can be StatefulSet or Deployment
-# Deployment requires an S3-compatible storage backend to be configured and
-# we recommend also enabling juicefs-s3-gateway. With JuiceFS, other non-S3 backends
-# can be used. See juicefs-s3-gateway section below.
+# Deployment requires an S3-compatible storage backend to be configured unless
+# your PVC supports mounting from multiple pods. If using S3 storage, we
+# recommend also enabling juicefs-s3-gateway for caching. With JuiceFS, other
+# non-S3 backends can be used, such as Azure Blob Storage. See the juicefs-s3-gateway
+# section below.
 kind: StatefulSet
 
 # only applicable for Deployment kind
