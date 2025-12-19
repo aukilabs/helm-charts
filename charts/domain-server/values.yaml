@@ -7,9 +7,11 @@ containerImage:
 applicationName: domain-server
 
 # kind can be StatefulSet or Deployment
-# Deployment requires an S3-compatible storage backend to be configured and
-# we recommend also enabling juicefs-s3-gateway. With JuiceFS, other non-S3 backends
-# can be used. See juicefs-s3-gateway section below.
+# Deployment requires an S3-compatible storage backend to be configured unless
+# your PVC supports mounting from multiple pods. If using S3 storage, we
+# recommend also enabling juicefs-s3-gateway for caching. With JuiceFS, other
+# non-S3 backends can be used, such as Azure Blob Storage. See the juicefs-s3-gateway
+# section below.
 kind: StatefulSet
 
 # only applicable for Deployment kind
@@ -106,12 +108,15 @@ secrets:
       wallet-private.key:
         filePath: wallet-private.key
 
+# These are the recommended minimums but feel free to adjust based on your expected load.
 containerResources:
   limits:
     memory: 256Mi
   requests:
     memory: 256Mi
     cpu: 1
+    # We recommend setting this to the same as emptyDir.sizeLimit if persistentVolume.enabled=false
+    # ephemeral-storage: 20Gi
 
 monitoring:
   namespace: monitoring
@@ -126,10 +131,14 @@ secretFile:
   postgresUrl: "postgres://domain-server:domain-server@domain-server-postgresql:5432/domain-server?sslmode=disable"
   registrationCredentials: "MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwOmludmFsaWQ="
 emptyDir:
-  sizeLimit: "8Gi"
+  sizeLimit: "20Gi"
 persistentVolume:
   ## If true, create/use a Persistent Volume Claim
   ## If false, use emptyDir
+  ## We recommend using persistent volumes even for S3 storage because when
+  ## domain backups are restored, they first need to be stored locally.
+  ## The alternative is to have enough of ephemeral storage on the K8s node
+  ## running the domain-server and use emptyDir.
   ##
   enabled: true
 
