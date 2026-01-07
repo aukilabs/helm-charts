@@ -1,3 +1,7 @@
+{{- /* Pre-deployment Validation: Prevent single PVC on multi-replica StatefulSets */ -}}
+{{- if and (eq .Values.kind "StatefulSet") .Values.persistentVolume.existingClaim (gt (int .Values.replicaCount) 1) }}
+  {{- fail "ERROR: A single 'existingClaim' cannot be used with a multi-replica StatefulSet unless the storage provider supports ReadWriteMany. Please use 'volumeClaimTemplates' (remove existingClaim) or set replicas to 1." }}
+{{- end }}
 {{- $secrets := .Values.secrets }}
 {{- $hasVolumeSecret := false }}
 {{- $fullName := include "domain-server.fullname" . }}
@@ -52,9 +56,11 @@ spec:
               protocol: {{ $portSpec.protocol }}
             {{- end }}
           volumeMounts:
-            - name: {{ ternary .Values.persistentVolume.statefulSetNameOverride "storage-volume" (and .Values.persistentVolume.enabled (not (empty .Values.persistentVolume.statefulSetNameOverride))) }}
-              mountPath: "{{ .Values.persistentVolume.mountPath }}"
-              subPath: "{{ .Values.persistentVolume.subPath }}"
+            - name: {{ .Values.persistentVolume.nameOverride | default "storage-volume" }}
+              mountPath: {{ .Values.persistentVolume.mountPath | quote }}
+              {{- if .Values.persistentVolume.subPath }}
+              subPath: {{ .Values.persistentVolume.subPath | quote }}
+              {{- end }}
           {{- if $hasVolumeSecret }}
             {{- range $secretName, $secretConfig := $secrets }}
               {{- if eq $secretConfig.as "volume" }}
@@ -68,9 +74,9 @@ spec:
             {{- end }}
           {{- end }}
           securityContext:
-{{ toYaml .Values.containerSecurityContext | indent 12 }}
+            {{- toYaml .Values.containerSecurityContext | nindent 12 }}
           resources:
-{{ toYaml .Values.containerResources | indent 12 }}
+            {{- toYaml .Values.containerResources | nindent 12 }}
           env:
           {{- range $key, $value := .Values.envVars }}
             - name: {{ $key }}
@@ -102,55 +108,84 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-{{- if $hasVolumeSecret }}
       volumes:
-  {{- range $name, $value := $secrets }}
-    {{- if eq $value.as "volume" }}
+        {{- if $hasVolumeSecret }}
+        {{- range $name, $value := $secrets }}
+        {{- if eq $value.as "volume" }}
         - name: {{ $name }}
           secret:
             secretName: {{ $secretName }}
             defaultMode: 0400
-      {{- if $value.items }}
+            {{- if $value.items }}
             items:
-        {{- range $secretKey, $keyMountConfig := $value.items }}
+              {{- range $secretKey, $keyMountConfig := $value.items }}
               - key: {{ $secretKey }}
                 path: {{ required "filePath is required for secrets items" $keyMountConfig.filePath | quote }}
+              {{- end }}
+            {{- end }}
         {{- end }}
-      {{- end }}
-    {{- end }}
-  {{- end }}
-{{- end }}
-{{- if .Values.persistentVolume.enabled }}
+        {{- end }}
+        {{- end }}
+        {{- /* 1. USE EXISTING STATIC PVC (Deployment or StatefulSet) */}}
+        {{- if and .Values.persistentVolume.enabled .Values.persistentVolume.existingClaim }}
+        - name: {{ .Values.persistentVolume.nameOverride | default "storage-volume" }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistentVolume.existingClaim }}
+
+        {{- /* 2. DEPLOYMENT + DYNAMIC PVC (Generic Ephemeral) */}}
+        {{- else if and (eq .Values.kind "Deployment") .Values.persistentVolume.enabled }}
+        - name: {{ .Values.persistentVolume.nameOverride | default "storage-volume" }}
+          ephemeral:
+            volumeClaimTemplate:
+              {{- with .Values.persistentVolume.annotations }}
+              metadata:
+                annotations: {{ toYaml . | nindent 18 }}
+              {{- end }}
+              spec:
+                accessModes:
+                  {{- .Values.persistentVolume.accessModes | default (list "ReadWriteOnce") | toYaml | nindent 18 }}
+                {{- if hasKey .Values.persistentVolume "storageClass" }}
+                storageClassName: {{ .Values.persistentVolume.storageClass | quote }}
+                {{- end }}
+                resources:
+                  requests:
+                    storage: {{ .Values.persistentVolume.size | quote }}
+
+        {{- /* 3. FALLBACK TO EMPTYDIR (PVC Disabled) */}}
+        {{- else if not .Values.persistentVolume.enabled }}
+        - name: {{ .Values.persistentVolume.nameOverride | default "storage-volume" }}
+          emptyDir:
+            {{- with .Values.emptyDir.sizeLimit }}
+            sizeLimit: {{ . | quote }}
+            {{- end }}
+        {{- end }}
+
+{{- /* STATEFULSET DYNAMIC PERSISTENCE (Only if no existingClaim) */ -}}
+{{- if and (eq .Values.kind "StatefulSet") .Values.persistentVolume.enabled (not .Values.persistentVolume.existingClaim) }}
   volumeClaimTemplates:
     - metadata:
-        name: {{ .Values.persistentVolume.statefulSetNameOverride | default "storage-volume" }}
-        {{- if .Values.persistentVolume.annotations }}
-        annotations:
-{{ toYaml .Values.persistentVolume.annotations | indent 10 }}
-        {{- end }}
-        {{- if .Values.persistentVolume.labels }}
+        name: {{ .Values.persistentVolume.nameOverride | default "storage-volume" }}
+        {{- with .Values.persistentVolume.labels }}
         labels:
-{{ toYaml .Values.persistentVolume.labels | indent 10 }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.persistentVolume.annotations }}
+        annotations:
+          {{- toYaml . | nindent 10 }}
         {{- end }}
       spec:
         accessModes:
-{{ toYaml .Values.persistentVolume.accessModes | indent 10 }}
+          {{- .Values.persistentVolume.accessModes | default (list "ReadWriteOnce") | toYaml | nindent 10 }}
+        {{- if hasKey .Values.persistentVolume "storageClass" }}
+        storageClassName: {{ .Values.persistentVolume.storageClass | quote }}
+        {{- end }}
+        {{- with .Values.persistentVolume.selector }}
+        selector: {{ toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.persistentVolume.volumeName }}
+        volumeName: {{ . | quote }}
+        {{- end }}
         resources:
           requests:
-            storage: "{{ .Values.persistentVolume.size }}"
-      {{- if .Values.persistentVolume.storageClass }}
-      {{- if (eq "-" .Values.persistentVolume.storageClass) }}
-        storageClassName: ""
-      {{- else }}
-        storageClassName: "{{ .Values.persistentVolume.storageClass }}"
-      {{- end }}
-      {{- end }}
-{{- else }}
-        - name: storage-volume
-          emptyDir:
-          {{- if .Values.emptyDir.sizeLimit }}
-            sizeLimit: {{ .Values.emptyDir.sizeLimit }}
-          {{- else }}
-            {}
-          {{- end -}}
+            storage: {{ .Values.persistentVolume.size | quote }}
 {{- end }}
