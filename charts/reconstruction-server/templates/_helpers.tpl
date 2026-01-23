@@ -60,3 +60,27 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Validate configuration combinations.
+*/}}
+{{- define "reconstruction-server.validate" -}}
+{{- $poolSize := int (default 0 .Values.secretPool.size) -}}
+{{- if .Values.secretPool.enabled }}
+  {{- if lt $poolSize 1 }}
+    {{- fail "secretPool.size must be >= 1 when secretPool.enabled is true" }}
+  {{- end }}
+  {{- if not .Values.secretPool.namePrefix }}
+    {{- fail "secretPool.namePrefix must be set when secretPool.enabled is true" }}
+  {{- end }}
+{{- end }}
+{{- if .Values.autoscaling.hpa.enabled }}
+  {{- $maxReplicas := int (default 0 .Values.autoscaling.hpa.maxReplicas) -}}
+  {{- if and .Values.secretPool.enabled (gt $maxReplicas $poolSize) }}
+    {{- fail "autoscaling.hpa.maxReplicas cannot exceed secretPool.size" }}
+  {{- end }}
+  {{- if and (not .Values.autoscaling.hpa.targetCPU) (not .Values.autoscaling.hpa.targetMemory) }}
+    {{- fail "autoscaling.hpa requires targetCPU or targetMemory to be set" }}
+  {{- end }}
+{{- end }}
+{{- end }}

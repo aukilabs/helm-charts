@@ -1,18 +1,13 @@
+{{- include "reconstruction-server.validate" . }}
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "reconstruction-server.fullname" . }}
   labels:
     {{- include "reconstruction-server.labels" . | nindent 4 }}
 spec:
-  {{- if .Values.deploymentStrategy.enabled }}
-  strategy:
-    type: {{ .Values.deploymentStrategy.type }}
-  {{- if and (eq .Values.deploymentStrategy.type "RollingUpdate") .Values.deploymentStrategy.rollingUpdate }}
-    rollingUpdate:
-  {{ toYaml .Values.deploymentStrategy.rollingUpdate | indent 6 }}
-  {{- end }}
-  {{- end }}
+  serviceName: {{ include "reconstruction-server.fullname" . }}
+  replicas: {{ .Values.replicaCount | default 1 }}
   selector:
     matchLabels:
       {{- include "reconstruction-server.selectorLabels" . | nindent 6 }}
@@ -60,6 +55,26 @@ spec:
           env:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- if .Values.secretPool.enabled }}
+          command:
+            - /bin/sh
+            - -ec
+          args:
+            - |
+              ordinal="${HOSTNAME##*-}"
+              secret_dir="{{ .Values.secretPool.mountPath }}/${ordinal}"
+              if [ -z "${ordinal}" ] || [ ! -d "${secret_dir}" ]; then
+                echo "missing secret directory for pod ordinal ${ordinal}" >&2
+                ls -la {{ .Values.secretPool.mountPath }} || true
+                exit 1
+              fi
+              export REG_SECRET="$(cat "${secret_dir}/REG_SECRET")"
+              export SECP256K1_PRIVHEX="$(cat "${secret_dir}/SECP256K1_PRIVHEX")"
+              exec /app/compute-node{{ if .Values.apiKey }} --api-key={{ .Values.apiKey }}{{ end }}
+          {{- else if .Values.apiKey }}
+          args:
+            - "--api-key={{ .Values.apiKey }}"
+          {{- end }}
           volumeMounts:
             - name: shm
               mountPath: /dev/shm
@@ -69,10 +84,11 @@ spec:
               mountPath: /home/reconstruction-server
             - name: tmp
               mountPath: /tmp
-          {{- with .Values.apiKey }}
-          args:
-            - "--api-key={{ . }}"
-          {{- end }}
+            {{- if .Values.secretPool.enabled }}
+            - name: secret-pool
+              mountPath: {{ .Values.secretPool.mountPath }}
+              readOnly: true
+            {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -96,3 +112,18 @@ spec:
           emptyDir: {}
         - name: tmp
           emptyDir: {}
+        {{- if .Values.secretPool.enabled }}
+        - name: secret-pool
+          projected:
+            defaultMode: 0400
+            sources:
+              {{- range $i := until (int .Values.secretPool.size) }}
+              - secret:
+                  name: {{ printf "%s%d" $.Values.secretPool.namePrefix $i }}
+                  items:
+                    - key: REG_SECRET
+                      path: "{{ $i }}/REG_SECRET"
+                    - key: SECP256K1_PRIVHEX
+                      path: "{{ $i }}/SECP256K1_PRIVHEX"
+              {{- end }}
+        {{- end }}
