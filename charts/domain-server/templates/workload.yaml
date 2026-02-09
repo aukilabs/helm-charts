@@ -144,7 +144,7 @@ spec:
               spec:
                 accessModes:
                   {{- .Values.persistentVolume.accessModes | default (list "ReadWriteOnce") | toYaml | nindent 18 }}
-                {{- if hasKey .Values.persistentVolume "storageClass" }}
+                {{- if and (hasKey .Values.persistentVolume "storageClass") (ne .Values.persistentVolume.storageClass nil) }}
                 storageClassName: {{ .Values.persistentVolume.storageClass | quote }}
                 {{- end }}
                 resources:
