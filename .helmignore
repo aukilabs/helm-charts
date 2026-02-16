@@ -17,3 +17,6 @@
 .idea/
 *.tmproj
 .vscode/
+
+# Documents
+*.md
