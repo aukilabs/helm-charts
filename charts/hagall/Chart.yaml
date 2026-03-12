@@ -2,7 +2,7 @@ apiVersion: v2
 name: hagall
 description: Distributed, real-time networking server responsible for relaying messages among clients (participants) in posemesh sessions.
 type: application
-version: 0.2.0
+version: 0.2.1
 appVersion: "0.5"
 maintainers:
   - name: dataviruset
