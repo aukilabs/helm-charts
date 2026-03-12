@@ -3,6 +3,29 @@ entries:
   domain-server:
   - apiVersion: v2
     appVersion: "0.8"
+    created: "2026-03-12T07:18:56.811922248Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.7.27
+    - condition: juicefs-s3-gateway.enabled
+      name: juicefs-s3-gateway
+      repository: https://juicedata.github.io/charts/
+      version: 0.11.3
+    description: The Domain Server is responsible for storing poses of portals in
+      domains and spatial domain data such as scene reconstructions and occupancy
+      maps.
+    digest: c032ba3f097ad0707718583194387b63b96b95f46f716901ebeb0c4d70757af8
+    maintainers:
+    - name: dataviruset
+    name: domain-server
+    type: application
+    urls:
+    - https://github.com/aukilabs/helm-charts/releases/download/domain-server-0.5.5/domain-server-0.5.5.tgz
+    version: 0.5.5
+  - apiVersion: v2
+    appVersion: "0.8"
     created: "2026-02-09T08:28:08.050495485Z"
     dependencies:
     - condition: postgresql.enabled
@@ -317,6 +340,19 @@ entries:
   hagall:
   - apiVersion: v2
     appVersion: "0.5"
+    created: "2026-03-12T07:18:56.973920734Z"
+    description: Distributed, real-time networking server responsible for relaying
+      messages among clients (participants) in posemesh sessions.
+    digest: 4f75634820051ef51d1543530e14d264c30ae464a56e776fd9e89a26bdd9cae9
+    maintainers:
+    - name: dataviruset
+    name: hagall
+    type: application
+    urls:
+    - https://github.com/aukilabs/helm-charts/releases/download/hagall-0.2.1/hagall-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v2
+    appVersion: "0.5"
     created: "2023-12-06T06:39:18.438539819Z"
     description: Distributed, real-time networking server responsible for relaying
       messages among clients (participants) in posemesh sessions.
@@ -355,6 +391,19 @@ entries:
     - https://github.com/aukilabs/helm-charts/releases/download/hagall-0.1.0/hagall-0.1.0.tgz
     version: 0.1.0
   reconstruction-server:
+  - apiVersion: v2
+    appVersion: 0.2.0
+    created: "2026-03-12T07:18:57.139338317Z"
+    description: The Reconstruction Server runs local and global refinement pipelines
+      for scene reconstruction, pose refinement and more.
+    digest: 81d762bc4cca4ef54d4cb09f7e6e6a2b502bc690d486816f30bf889a5389368c
+    maintainers:
+    - name: dataviruset
+    name: reconstruction-server
+    type: application
+    urls:
+    - https://github.com/aukilabs/helm-charts/releases/download/reconstruction-server-0.2.1/reconstruction-server-0.2.1.tgz
+    version: 0.2.1
   - apiVersion: v2
     appVersion: 0.2.0
     created: "2025-11-28T04:53:05.993751246Z"
@@ -433,4 +482,18 @@ entries:
     urls:
     - https://github.com/aukilabs/helm-charts/releases/download/reconstruction-server-0.0.1/reconstruction-server-0.0.1.tgz
     version: 0.0.1
-generated: "2026-02-09T08:28:08.05062195Z"
+  splatter-server:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2026-03-12T07:18:57.282870901Z"
+    description: The Splatter Server runs splatfacto training pipelines for Posemesh
+      domains.
+    digest: bde4bfe7be9df970a20d33ef9ed3e84af86d0318ee7b9a534afdfb37e4e997a7
+    maintainers:
+    - name: tatiesmars
+    name: splatter-server
+    type: application
+    urls:
+    - https://github.com/aukilabs/helm-charts/releases/download/splatter-server-0.1.0/splatter-server-0.1.0.tgz
+    version: 0.1.0
+generated: "2026-03-12T07:18:57.282973272Z"
