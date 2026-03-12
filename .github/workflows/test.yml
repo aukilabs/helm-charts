@@ -58,7 +58,11 @@ jobs:
 
       - name: Run pre-install scripts
         if: steps.list-changed.outputs.changed == 'true'
-        run: find charts/*/scripts -name pre-install.sh -exec {} \;
+        run: |
+          set -euo pipefail
+          while IFS= read -r script; do
+            bash "$script"
+          done < <(find charts -path '*/scripts/pre-install.sh' | sort)
 
       - name: Run chart-testing (install)
         if: steps.list-changed.outputs.changed == 'true'
