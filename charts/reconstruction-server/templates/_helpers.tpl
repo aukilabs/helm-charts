@@ -60,3 +60,22 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Validate configuration combinations.
+*/}}
+{{- define "reconstruction-server.validate" -}}
+{{- $poolSize := int (default 0 .Values.secretPool.size) -}}
+{{- if .Values.secretPool.enabled }}
+  {{- if lt $poolSize 1 }}
+    {{- fail "secretPool.size must be >= 1 when secretPool.enabled is true" }}
+  {{- end }}
+  {{- if not .Values.secretPool.namePrefix }}
+    {{- fail "secretPool.namePrefix must be set when secretPool.enabled is true" }}
+  {{- end }}
+  {{- $replicas := int (default 1 .Values.replicaCount) -}}
+  {{- if gt $replicas $poolSize }}
+    {{- fail "replicaCount cannot exceed secretPool.size when secretPool.enabled is true" }}
+  {{- end }}
+{{- end }}
+{{- end }}

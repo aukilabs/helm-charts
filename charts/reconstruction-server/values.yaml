@@ -8,6 +8,16 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
+# Initial replica count for the StatefulSet.
+replicaCount: 1
+
+# Secret pool for per-pod credentials (StatefulSet ordinal -> secret).
+secretPool:
+  enabled: false
+  size: 0
+  namePrefix: "reconstruction-server-std-"
+  mountPath: "/var/run/reconstruction-server-secrets"
+
 # Extra environment variables (non-secret), keyed by name for deterministic merging
 extraEnvMap: {}
 
