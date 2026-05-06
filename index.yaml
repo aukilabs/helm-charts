@@ -393,6 +393,19 @@ entries:
   reconstruction-server:
   - apiVersion: v2
     appVersion: 0.3.1
+    created: "2026-05-06T02:07:23.236882229Z"
+    description: The Reconstruction Server runs local and global refinement pipelines
+      for scene reconstruction, pose refinement and more.
+    digest: 86e1c18b4fb5c8c47666ab6d9438a395863ab538d765e2c8f6c5b4ec23cbe1c4
+    maintainers:
+    - name: dataviruset
+    name: reconstruction-server
+    type: application
+    urls:
+    - https://github.com/aukilabs/helm-charts/releases/download/reconstruction-server-0.3.1/reconstruction-server-0.3.1.tgz
+    version: 0.3.1
+  - apiVersion: v2
+    appVersion: 0.3.1
     created: "2026-03-23T04:32:40.375914962Z"
     description: The Reconstruction Server runs local and global refinement pipelines
       for scene reconstruction, pose refinement and more.
@@ -509,4 +522,4 @@ entries:
     urls:
     - https://github.com/aukilabs/helm-charts/releases/download/splatter-server-0.1.0/splatter-server-0.1.0.tgz
     version: 0.1.0
-generated: "2026-03-23T04:32:40.375990364Z"
+generated: "2026-05-06T02:07:23.236978958Z"
