@@ -1,0 +1,21 @@
+{{- if .Values.monitoring.podMonitor.create -}}
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: {{ include "policy-system.fullname" . }}
+  namespace: {{ .Values.monitoring.namespace }}
+  labels:
+    {{- include "policy-system.labels" . | nindent 4 }}
+spec:
+  jobLabel: {{ include "policy-system.fullname" . }}
+  selector:
+    matchLabels:
+      {{ include "policy-system.selectorLabels" . | nindent 6 }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  podMetricsEndpoints:
+    - interval: {{ .Values.monitoring.podMonitor.scrapeInterval }}
+      path: /metrics
+      port: app
+{{- end }}

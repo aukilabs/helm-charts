@@ -1,0 +1,89 @@
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+image:
+  pullPolicy: IfNotPresent
+  repository: aukilabs/policy-system
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+# Extra environment variables (non-secret), keyed by name for deterministic merging
+extraEnvMap: {}
+
+# Optional envFrom entries (e.g. secrets or configmaps)
+envFrom: []
+
+tolerations: []
+
+nodeSelector: {}
+
+affinity: {}
+
+resources: {}
+#   limits:
+#     memory: 256Mi
+#     cpu: 500m
+#   requests:
+#     memory: 128Mi
+#     cpu: 250m
+
+containerPorts:
+  app:
+    port: 8080
+    protocol: TCP
+
+service:
+  enabled: true
+  ports:
+    app:
+      port: 80
+      targetPort: 8080
+      protocol: TCP
+
+ingress:
+  enabled: false
+  # className: nginx
+  annotations:
+    # kubernetes.io/tls-acme: "true"
+  path: /
+  pathType: Prefix
+  servicePort: app
+  # hosts:
+  #   - chart-example.local
+  # tls:
+  #   - secretName: chart-example-tls
+  #     hosts:
+  #       - chart-example.local
+
+monitoring:
+  namespace: monitoring
+  podMonitor:
+    create: false
+    scrapeInterval: 10s
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  fsGroup: 1000
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+
+deploymentStrategy:
+  enabled: true
+  type: RollingUpdate
