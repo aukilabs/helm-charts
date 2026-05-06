@@ -1,0 +1,8 @@
+apiVersion: v2
+name: policy-system
+description: The Policy System provides policy management and authorization services.
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+maintainers:
+  - name: tatiesmars
