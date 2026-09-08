@@ -276,6 +276,8 @@ containerSecurityContext:
   capabilities:
     drop:
     - ALL
+  seccompProfile:
+    type: RuntimeDefault
 
 # See https://github.com/juicedata/charts/blob/helm-chart-juicefs-s3-gateway-0.11.3/charts/juicefs-s3-gateway/values.yaml
 juicefs-s3-gateway:
