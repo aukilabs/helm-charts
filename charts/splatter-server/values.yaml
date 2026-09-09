@@ -95,6 +95,7 @@ podSecurityContext:
   fsGroup: 1000
 
 securityContext:
+  allowPrivilegeEscalation: false
   capabilities:
     drop:
     - ALL
@@ -102,6 +103,8 @@ securityContext:
   readOnlyRootFilesystem: false
   runAsNonRoot: true
   runAsUser: 1000
+  seccompProfile:
+    type: RuntimeDefault
 
 deploymentStrategy:
   enabled: true
