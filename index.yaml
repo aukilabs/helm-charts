@@ -416,6 +416,19 @@ entries:
   reconstruction-server:
   - apiVersion: v2
     appVersion: 0.3.1
+    created: "2026-09-09T04:38:26.287066028Z"
+    description: The Reconstruction Server runs local and global refinement pipelines
+      for scene reconstruction, pose refinement and more.
+    digest: b79657a695ea90b8cd51b1389dadcc67d84b777dd77d1f72e92e55320509e96f
+    maintainers:
+    - name: dataviruset
+    name: reconstruction-server
+    type: application
+    urls:
+    - https://github.com/aukilabs/helm-charts/releases/download/reconstruction-server-0.3.2/reconstruction-server-0.3.2.tgz
+    version: 0.3.2
+  - apiVersion: v2
+    appVersion: 0.3.1
     created: "2026-05-06T02:07:23.236882229Z"
     description: The Reconstruction Server runs local and global refinement pipelines
       for scene reconstruction, pose refinement and more.
@@ -534,6 +547,19 @@ entries:
   splatter-server:
   - apiVersion: v2
     appVersion: 0.1.0
+    created: "2026-09-09T04:38:26.454095978Z"
+    description: The Splatter Server runs splatfacto training pipelines for Posemesh
+      domains.
+    digest: 45e542ec43b936f102e26b416d3810cb75c70b8ee91e4d3beb973bf786d2915e
+    maintainers:
+    - name: tatiesmars
+    name: splatter-server
+    type: application
+    urls:
+    - https://github.com/aukilabs/helm-charts/releases/download/splatter-server-0.1.1/splatter-server-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 0.1.0
     created: "2026-03-12T07:18:57.282870901Z"
     description: The Splatter Server runs splatfacto training pipelines for Posemesh
       domains.
@@ -545,4 +571,4 @@ entries:
     urls:
     - https://github.com/aukilabs/helm-charts/releases/download/splatter-server-0.1.0/splatter-server-0.1.0.tgz
     version: 0.1.0
-generated: "2026-09-09T02:13:19.71299707Z"
+generated: "2026-09-09T04:38:26.454147283Z"
