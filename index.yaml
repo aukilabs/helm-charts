@@ -362,6 +362,18 @@ entries:
     version: 0.1.0
   hagall:
   - apiVersion: v2
+    appVersion: v1.0.0-RC-0
+    created: "2026-09-10T05:35:15.849266951Z"
+    description: Standalone libp2p Circuit Relay v2 node
+    digest: 03d3d69c44fa40717710cc7f3578338000513484cb3c93ec7068172b5f477390
+    maintainers:
+    - name: dataviruset
+    name: hagall
+    type: application
+    urls:
+    - https://github.com/aukilabs/helm-charts/releases/download/hagall-1.0.0/hagall-1.0.0.tgz
+    version: 1.0.0
+  - apiVersion: v2
     appVersion: "0.5"
     created: "2026-03-12T07:18:56.973920734Z"
     description: Distributed, real-time networking server responsible for relaying
@@ -571,4 +583,4 @@ entries:
     urls:
     - https://github.com/aukilabs/helm-charts/releases/download/splatter-server-0.1.0/splatter-server-0.1.0.tgz
     version: 0.1.0
-generated: "2026-09-09T04:38:26.454147283Z"
+generated: "2026-09-10T05:35:15.849343997Z"
