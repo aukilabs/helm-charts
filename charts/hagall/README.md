@@ -37,12 +37,37 @@ port `9091` are ClusterIP-only; the optional PodMonitor scrapes the metrics port
 ```sh
 helm repo add auki https://charts.aukiverse.com
 helm repo update auki
-helm upgrade --install hagall auki/hagall --version 1.0.0 \
+helm upgrade --install hagall auki/hagall --version 1.1.0 \
   --namespace default -f /path/to/relay-values.yaml
 ```
 
 When consuming this chart as a dependency, nest overrides under `hagall:` in the
 parent chart. The wrapper and dev defaults are maintained in the Hagall repo.
+
+## Capacity
+
+`relay.capacity` accepts 1–2048 and defaults to 32. Values above 256 require a
+Hagall image supporting 2048 slots and DMS migration `0013_relay_capacity_2048`.
+Deploy those first, then explicitly raise DMS's configured provider ceiling and
+organization quota together with the chart capacity/DDS registration. The chart's
+default application image predates that support; pin a compatible image for
+larger capacities. The ceiling is not a measured throughput guarantee.
+
+`relay.maxCircuitsPerPeer` independently accepts 1–256. When null it preserves
+legacy behavior for existing capacities and caps at 256 for larger capacities.
+For a 9-publisher/1-consumer topology, an explicit 32 leaves reconnection room.
+Authentication concurrency, pod CPU/memory, and booking capacity defaults remain
+unchanged; size and measure them independently.
+
+Connection budgets grow with capacity while retaining existing defaults:
+
+- Connection-manager low water: `max(768, capacity)`.
+- High water: `max(1024, low water + 256)`.
+- Resource-manager connections: `max(2048, high water)`.
+
+At 2048 slots these are 2048 / 2304 / 2304. They fit the relay's unchanged 4096
+file-descriptor and 8192 stream limits. Total/IP/ASN reservation quotas track
+capacity, as before. One persisted relay identity still permits only one pod.
 
 ## Migration from the legacy chart
 

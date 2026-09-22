@@ -1,3 +1,5 @@
+{{- $connectionLow := max 768 .Values.relay.capacity -}}
+{{- $connectionHigh := max 1024 (add $connectionLow 256) -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -86,10 +88,18 @@ spec:
               value: {{ .Values.relay.authAttemptsPerIP | quote }}
             - name: RELAY_AUTH_MAX_ATTEMPTS_PER_PEER
               value: {{ .Values.relay.authAttemptsPerPeer | quote }}
-            {{- range $name := list "RELAY_DDS_MAX_CONCURRENCY" "RELAY_LOCAL_CAPACITY" "RELAY_MAX_RESERVATIONS" "RELAY_MAX_RESERVATIONS_PER_IP" "RELAY_MAX_RESERVATIONS_PER_ASN" "RELAY_MAX_CIRCUITS_PER_PEER" }}
+            {{- range $name := list "RELAY_DDS_MAX_CONCURRENCY" "RELAY_LOCAL_CAPACITY" "RELAY_MAX_RESERVATIONS" "RELAY_MAX_RESERVATIONS_PER_IP" "RELAY_MAX_RESERVATIONS_PER_ASN" }}
             - name: {{ $name }}
               value: {{ $.Values.relay.capacity | quote }}
             {{- end }}
+            - name: RELAY_MAX_CIRCUITS_PER_PEER
+              value: {{ default (min .Values.relay.capacity 256) .Values.relay.maxCircuitsPerPeer | quote }}
+            - name: RELAY_CONNMGR_LOW_WATER
+              value: {{ $connectionLow | quote }}
+            - name: RELAY_CONNMGR_HIGH_WATER
+              value: {{ $connectionHigh | quote }}
+            - name: RELAY_RM_CONNECTIONS
+              value: {{ max 2048 $connectionHigh | quote }}
             - name: RELAY_ACCEPT_BOOKINGS
               value: {{ .Values.relay.acceptBookings | quote }}
             - name: RELAY_SHUTDOWN_DRAIN
