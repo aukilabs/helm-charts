@@ -17,7 +17,11 @@ relay:
   dmsUrl: ""
   publicHost: ""
   peerId: ""
+  # Booking/reservation ceiling; values above 256 need compatible Hagall and DMS.
   capacity: 32
+  # Null preserves the previous capacity-derived value, capped at 256.
+  # Set independently (e.g. 32) for many peers with few circuits per peer.
+  maxCircuitsPerPeer: null
   acceptBookings: false
   admissionTTL: 25s
   authConcurrency: 64
