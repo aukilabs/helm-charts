@@ -37,7 +37,7 @@ done
 diff -u "$check_dir/direct.json" "$check_dir/wrapped.json"
 
 # Preserve schema enforcement when accepting the reserved Helm global value.
-for invalid in 'replicaCount=2' 'identity.existingSecret=' 'image.digest=invalid' 'unknownSetting=true' 'relay.capacity=2049' 'relay.maxCircuitsPerPeer=257' 'relay.maxCircuitsPerPeer=0'; do
+for invalid in 'replicaCount=2' 'identity.existingSecret=' 'image.digest=invalid' 'unknownSetting=true' 'relay.capacity=0' 'relay.capacity=2147483648' 'relay.maxCircuitsPerPeer=257' 'relay.maxCircuitsPerPeer=0'; do
   if helm template hagall "$chart_root" -f "$fixture" --set "$invalid" \
     > "$check_dir/invalid.log" 2>&1; then
     printf 'Expected schema rejection for %s\n' "$invalid" >&2
@@ -49,7 +49,7 @@ printf 'Hagall lint, schema rejection, and subchart equivalence checks passed.\n
 
 # Preserve existing per-peer behavior and support the full booking ceiling with
 # finite connection budgets and an independently configured per-peer limit.
-for capacity in 32 128 2048; do
+for capacity in 32 128 800 2048 10000; do
   helm template hagall "$chart_root" -f "$fixture" --set "relay.capacity=$capacity" \
     > "$check_dir/capacity.yaml"
   yq -o=json 'select(.kind == "Deployment") | .spec.template.spec.containers[0].env' \
@@ -61,7 +61,10 @@ for capacity in 32 128 2048; do
       (.RELAY_CONNMGR_LOW_WATER | tonumber) == ([768, $capacity] | max) and
       (.RELAY_CONNMGR_HIGH_WATER | tonumber) > (.RELAY_CONNMGR_LOW_WATER | tonumber) and
       (.RELAY_RM_CONNECTIONS | tonumber) >= (.RELAY_CONNMGR_HIGH_WATER | tonumber) and
-      (.RELAY_RM_CONNECTIONS | tonumber) <= 4096
+      (.RELAY_RM_FILE_DESCRIPTORS | tonumber) >= (.RELAY_RM_CONNECTIONS | tonumber) and
+      (.RELAY_RM_STREAMS | tonumber) >= (.RELAY_RM_CONNECTIONS | tonumber) and
+      (.RELAY_RM_STREAMS | tonumber) >= (4 * $capacity) and
+      (.RELAY_ADMISSION_MAX_ENTRIES | tonumber) >= (2 * $capacity)
     ' > /dev/null
 done
 helm template hagall "$chart_root" -f "$fixture" \

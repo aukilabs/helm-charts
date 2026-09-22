@@ -1,5 +1,6 @@
 {{- $connectionLow := max 768 .Values.relay.capacity -}}
 {{- $connectionHigh := max 1024 (add $connectionLow 256) -}}
+{{- $connections := max 2048 $connectionHigh -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -99,7 +100,13 @@ spec:
             - name: RELAY_CONNMGR_HIGH_WATER
               value: {{ $connectionHigh | quote }}
             - name: RELAY_RM_CONNECTIONS
-              value: {{ max 2048 $connectionHigh | quote }}
+              value: {{ $connections | quote }}
+            - name: RELAY_RM_FILE_DESCRIPTORS
+              value: {{ max 4096 $connections | quote }}
+            - name: RELAY_RM_STREAMS
+              value: {{ max 8192 $connections (mul .Values.relay.capacity 4) | quote }}
+            - name: RELAY_ADMISSION_MAX_ENTRIES
+              value: {{ max 4096 (mul .Values.relay.capacity 2) | quote }}
             - name: RELAY_ACCEPT_BOOKINGS
               value: {{ .Values.relay.acceptBookings | quote }}
             - name: RELAY_SHUTDOWN_DRAIN
