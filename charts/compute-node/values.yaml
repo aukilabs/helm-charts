@@ -1,0 +1,101 @@
+# Default values for compute-node
+# This is a YAML-formatted file.
+
+# Service Account configuration
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {}
+
+# Server configuration
+server:
+  enabled: true
+  replicas: 1
+  image:
+    # repository: ""
+    tag: "latest"
+    pullPolicy: Always
+  resources: {}
+  ports:
+    main: 8080
+    admin: 18190
+  tolerations: {}
+  # Extra keys added to the configmap that are then supplied as env vars to the server
+  extraConfig: {}
+  # Extra env vars
+  env: {}
+  enableProbes: true
+  postgresql:
+    # Here you can override the connection string, for example if you want to use
+    # a PostgreSQL instance not managed by this chart (postgresql.enabled=false below)
+    url: ""
+
+# UI configuration
+ui:
+  enabled: true
+  replicas: 1
+  port: 3000
+  image:
+    # repository: ""
+    tag: "latest"
+    pullPolicy: Always
+  resources: {}
+  enableProbes: true
+
+# Database configuration
+# See https://github.com/bitnami/charts/blob/postgresql/15.4.2/bitnami/postgresql/values.yaml
+postgresql:
+  enabled: true
+  # If true, the PostgreSQL dependency is enabled
+  global:
+    # defaultStorageClass: ""
+    postgresql:
+      auth:
+        # It's recommended to change to something more secure
+        username: compute-node
+        password: compute-node
+        database: compute-node
+  primary:
+    networkPolicy:
+      enabled: false
+    resources: {}
+  fullnameOverride: ""
+
+# Storage configuration
+storage:
+  enabled: true
+  # storageClass: ""
+  size: "100Gi"
+  accessMode: ReadWriteOnce
+  mountPath: /data
+
+# Ingress configuration
+ingress:
+  enabled: false
+  # className: nginx
+  annotations:
+    # kubernetes.io/tls-acme: "true"
+  # hosts:
+  #   - chart-example.local
+  # tls:
+  #   - secretName: chart-example-tls
+  #     hosts:
+  #       - chart-example.local
+
+# Service configuration
+service:
+  type: ClusterIP
+  annotations: {}
+
+# Security configuration
+security:
+  createSecret: true
+  # Obtained from the Auki console (console.auki.network)
+  appKey: "changeme"
+  appSecret: "changeme"
+  # Or use an existing secret:
+  # existingSecretName: ""
+
+# Labels and annotations
+labels: {}
+annotations: {}
